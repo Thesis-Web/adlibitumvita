@@ -9,7 +9,8 @@ Group=deploy
 WorkingDirectory=/var/www/adlibitumvita/current
 EnvironmentFile=/srv/adlibitumvita/shared/.env
 Environment=HOST=127.0.0.1
-ExecStart=/usr/bin/node ./dist/server/entry.mjs
+# ALV-owned Node runtime — never the system Node other apps on this host use.
+ExecStart=/srv/adlibitumvita/shared/runtime/current/bin/node ./dist/server/entry.mjs
 Restart=on-failure
 RestartSec=3
 MemoryMax=512M

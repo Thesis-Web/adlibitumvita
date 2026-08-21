@@ -41,14 +41,24 @@ Dev/test databases live in `.data/` (gitignored). Production:
 
 No default admin account is ever created automatically.
 
+In development, `.env` is picked up automatically from the repo root. In
+production the release directory has no `.env` of its own — the real one
+lives at `/srv/adlibitumvita/shared/.env` (referenced by systemd) and must
+be sourced explicitly for one-off commands:
+
 ```bash
-cd /var/www/adlibitumvita/current     # or the repo root in development
+cd /var/www/adlibitumvita/current
+set -a; source /srv/adlibitumvita/shared/.env; set +a
 npm run admin:create -- --email you@example.com --name "Your Name"
 # prompts for a password (min 12 chars), or set ADMIN_BOOTSTRAP_PASSWORD to skip the prompt
 ```
 
 This creates the user, sets `role = admin`, and grants active library
 access. Log in at `/login`. A second admin requires `--force`.
+
+(In production, use the release's own Node — see "Deploy" below — e.g.
+`/srv/adlibitumvita/shared/runtime/current/bin/npm run admin:create -- ...`
+if the system Node isn't the one on your `PATH`.)
 
 ## Adding a family user
 
@@ -91,22 +101,30 @@ npm run import:facebook -- --source /path/to/export --commit     # only touches 
 
 ## Deploy
 
-Normal path: push to `main`. `.github/workflows/deploy.yml` builds, tests,
-validates migrations against a scratch DB, assembles a self-contained
-release (pruned `node_modules` included — the droplet never runs
-`npm install`), rsyncs it to `/var/www/adlibitumvita/releases/<sha>`, backs
-up the live DB, migrates, flips the `current` symlink, restarts
-`adlibitumvita.service`, and rolls back the symlink automatically if
-`/api/health` fails after restart.
-
-Direct/manual deploy from a machine with SSH access:
+**First deploy, or any manual deploy, run directly on the droplet:**
 
 ```bash
-GIT_SHA=$(git rev-parse HEAD) npm run build
-npm prune --omit=dev
-mkdir release && cp -r dist migrations scripts node_modules package.json package-lock.json release/
-DEPLOY_HOST=146.190.139.104 DEPLOY_USER=deploy GIT_SHA=$(git rev-parse HEAD) bash deploy/deploy-to-droplet.sh
+cd /home/deploy/repos/adlibitumvita
+git pull
+bash deploy/bootstrap-host.sh
 ```
+
+This one script is idempotent — first run bootstraps everything (ALV-private
+Node 22 runtime, `/srv/adlibitumvita` + `/var/www/adlibitumvita` layout,
+`.env` with a generated secret, systemd unit, nginx vhost, TLS via certbot),
+and every re-run just builds and atomically deploys the current commit. It
+never touches the system Node (other apps on this host keep using their
+own), never touches another site's nginx config, and prints exact health
+check URLs when done. See `deploy/bootstrap-host.sh` for the full sequence.
+
+**Normal path once GitHub Actions secrets exist:** push to `main`.
+`.github/workflows/deploy.yml` builds, tests, validates migrations against a
+scratch DB, assembles a self-contained release (pruned `node_modules`
+included — the droplet never runs `npm install` over SSH), rsyncs it to
+`/var/www/adlibitumvita/releases/<sha>`, then runs the same
+`deploy/release-current.sh` cutover (backup, migrate, flip `current`,
+restart, health check, automatic rollback on failure) that
+`bootstrap-host.sh` uses locally.
 
 ## Rollback
 

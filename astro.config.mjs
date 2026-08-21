@@ -12,4 +12,8 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
+  // Better Auth owns session state (SQLite + cookies) — Astro's own
+  // filesystem-backed Sessions API is unused and would otherwise write
+  // under node_modules/.astro/sessions at runtime.
+  session: false,
 });
