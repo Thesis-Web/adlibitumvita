@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Library" noindex>
+  <h1>The Library</h1>
+  <p class="muted">Welcome back, {Astro.locals.user?.name}.</p>
+
+  <ul style="list-style: none; padding: 0; display: grid; gap: 1rem;">
+    <li class="card">
+      <a href="/library/captains-log"><strong>Captain's Log</strong></a>
+      <p class="muted">The expedition narrative, chapter by chapter.</p>
+    </li>
+    <li class="card">
+      <a href="/library/beyond-the-map"><strong>Beyond the Map</strong></a>
+      <p class="muted">The mindset behind an expedition.</p>
+    </li>
+    <li class="card">
+      <a href="/library/search"><strong>Search</strong></a>
+      <p class="muted">Find a phrase, a place, a day.</p>
+    </li>
+  </ul>
+</BaseLayout>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { listContentEntries, type Collection, type ContentStatus } from "../../../lib/content.js";
+
+const collectionFilter = Astro.url.searchParams.get("collection") as Collection | null;
+const statusFilter = Astro.url.searchParams.get("status") as ContentStatus | null;
+
+const entries = listContentEntries({
+  collection: collectionFilter ?? undefined,
+  status: statusFilter ?? undefined,
+});
+---
+
+<BaseLayout title="Manage Content" noindex>
+  <h1>Content</h1>
+
+  <form method="get" style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+    <select name="collection">
+      <option value="" selected={!collectionFilter}>All collections</option>
+      <option value="captains-log" selected={collectionFilter === "captains-log"}>Captain's Log</option>
+      <option value="beyond-the-map" selected={collectionFilter === "beyond-the-map"}>Beyond the Map</option>
+    </select>
+    <select name="status">
+      <option value="" selected={!statusFilter}>All statuses</option>
+      <option value="draft" selected={statusFilter === "draft"}>Draft</option>
+      <option value="published" selected={statusFilter === "published"}>Published</option>
+    </select>
+    <button class="btn secondary" type="submit">Filter</button>
+    <a class="btn" href="/admin/content/new" style="margin-left: auto;">New Entry</a>
+  </form>
+
+  {entries.length === 0 ? (
+    <p class="muted">No entries match.</p>
+  ) : (
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="text-align: left; border-bottom: 1px solid var(--border);">
+          <th style="padding: 0.5rem 0.25rem;">Title</th>
+          <th style="padding: 0.5rem 0.25rem;">Collection</th>
+          <th style="padding: 0.5rem 0.25rem;">Label</th>
+          <th style="padding: 0.5rem 0.25rem;">Status</th>
+          <th style="padding: 0.5rem 0.25rem;">Visibility</th>
+          <th style="padding: 0.5rem 0.25rem;">Updated</th>
+          <th style="padding: 0.5rem 0.25rem;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {entries.map((entry) => (
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem 0.25rem;">{entry.title}</td>
+            <td style="padding: 0.5rem 0.25rem;">{entry.collection === "captains-log" ? "Captain's Log" : "Beyond the Map"}</td>
+            <td style="padding: 0.5rem 0.25rem;" class="muted">
+              {entry.day_number != null && `Day ${entry.day_number}`}
+              {entry.chapter_number != null && `Ch. ${entry.chapter_number}`}
+            </td>
+            <td style="padding: 0.5rem 0.25rem;">{entry.status}</td>
+            <td style="padding: 0.5rem 0.25rem;">{entry.visibility}</td>
+            <td style="padding: 0.5rem 0.25rem;" class="muted">{entry.updated_at.slice(0, 10)}</td>
+            <td style="padding: 0.5rem 0.25rem;">
+              <a href={`/admin/content/${entry.id}`}>Edit</a>
+              {entry.status === "published" && (
+                <>
+                  {" · "}
+                  <a href={`/library/${entry.collection}/${entry.slug}`} target="_blank">View</a>
+                </>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</BaseLayout>

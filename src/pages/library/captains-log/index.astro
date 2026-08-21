@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { listPublishedForLibrary } from "../../../lib/content.js";
+
+const entries = listPublishedForLibrary("captains-log");
+---
+
+<BaseLayout title="Captain's Log" noindex>
+  <h1>Captain's Log</h1>
+  <p class="muted">The expedition narrative — day by day, wherever "day" turns out to mean.</p>
+
+  {entries.length === 0 ? (
+    <p class="muted">No entries published yet.</p>
+  ) : (
+    <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
+      {entries.map((entry) => (
+        <li class="card">
+          <a href={`/library/captains-log/${entry.slug}`}><strong>{entry.title}</strong></a>
+          <p class="muted">
+            {entry.day_number != null && <span>Day {entry.day_number} · </span>}
+            {entry.expedition_date && <span>{entry.expedition_date} · </span>}
+            {entry.location}
+          </p>
+          {entry.excerpt && <p>{entry.excerpt}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>

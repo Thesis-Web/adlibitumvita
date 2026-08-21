@@ -1,0 +1,15 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const user = Astro.locals.user;
+---
+
+<BaseLayout title="Account" noindex>
+  <h1>Account</h1>
+  <div class="card" style="max-width: 24rem;">
+    <p><strong>{user?.name}</strong></p>
+    <p class="muted">{user?.email}</p>
+    <p class="muted">Role: {user?.role}</p>
+    <a class="btn secondary" href="/logout">Log out</a>
+  </div>
+</BaseLayout>

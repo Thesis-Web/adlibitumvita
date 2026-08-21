@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: adlibitumvita-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.2"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Validate migrations against a fresh database
+        run: npm run db:migrate
+        env:
+          DATABASE_PATH: .data/ci-migration-check.sqlite3
+          BETTER_AUTH_SECRET: ci-only-secret-not-used-in-production-000000
+          BETTER_AUTH_URL: http://localhost:3211
+
+      - name: Build
+        run: npm run build
+        env:
+          GIT_SHA: ${{ github.sha }}
+          BETTER_AUTH_SECRET: ci-only-secret-not-used-in-production-000000
+          BETTER_AUTH_URL: https://adlibitumvita.com
+
+      - name: Assert build invariants
+        run: |
+          test -f dist/server/entry.mjs
+          test -f src/generated/build-info.json
+
+      - name: Prune to production dependencies
+        run: npm prune --omit=dev
+
+      - name: Assemble release artifact
+        run: |
+          mkdir -p release
+          cp -r dist release/dist
+          cp -r migrations release/migrations
+          cp -r scripts release/scripts
+          cp -r node_modules release/node_modules
+          cp package.json release/package.json
+          cp package-lock.json release/package-lock.json
+
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          GIT_SHA: ${{ github.sha }}
+        run: bash deploy/deploy-to-droplet.sh

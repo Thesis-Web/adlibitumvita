@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { listUsers } from "../../../lib/users.js";
+
+const users = listUsers();
+---
+
+<BaseLayout title="Users" noindex>
+  <h1>Users</h1>
+
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+    <thead>
+      <tr style="text-align: left; border-bottom: 1px solid var(--border);">
+        <th style="padding: 0.5rem 0.25rem;">Name</th>
+        <th style="padding: 0.5rem 0.25rem;">Email</th>
+        <th style="padding: 0.5rem 0.25rem;">Role</th>
+        <th style="padding: 0.5rem 0.25rem;">Library access</th>
+        <th style="padding: 0.5rem 0.25rem;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.map((user) => (
+        <tr style="border-bottom: 1px solid var(--border);" data-user-id={user.id}>
+          <td style="padding: 0.5rem 0.25rem;">{user.name}</td>
+          <td style="padding: 0.5rem 0.25rem;">{user.email}</td>
+          <td style="padding: 0.5rem 0.25rem;">{user.role}</td>
+          <td style="padding: 0.5rem 0.25rem;">{user.hasLibraryAccess ? "active" : "—"}</td>
+          <td style="padding: 0.5rem 0.25rem;">
+            <button type="button" class="btn secondary grant-toggle" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">
+              {user.hasLibraryAccess ? "Revoke" : "Grant"}
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>Add a family user</h2>
+  <form id="create-user-form" class="card" style="max-width: 24rem;">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" name="name" required />
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required />
+    </div>
+    <div class="field">
+      <label for="password">Temporary password</label>
+      <input id="password" name="password" type="password" minlength="12" required />
+    </div>
+    <p id="create-error" class="muted" style="color: #a33; display: none;"></p>
+    <button class="btn" type="submit">Create user with library access</button>
+  </form>
+
+  <script>
+    const table = document.querySelector("tbody") as HTMLElement;
+    table.addEventListener("click", async (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.classList.contains("grant-toggle")) return;
+      const row = target.closest("[data-user-id]") as HTMLElement;
+      const userId = row.dataset.userId!;
+      const isRevoking = target.textContent?.trim() === "Revoke";
+      await fetch(`/api/admin/users/${userId}/grant`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action: isRevoking ? "revoke" : "grant" }),
+      });
+      window.location.reload();
+    });
+
+    const form = document.getElementById("create-user-form") as HTMLFormElement;
+    const errorEl = document.getElementById("create-error") as HTMLElement;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          password: data.get("password"),
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        errorEl.textContent = body.error?.message ?? body.error ?? "Could not create user.";
+        errorEl.style.display = "block";
+        return;
+      }
+      window.location.reload();
+    });
+  </script>
+</BaseLayout>

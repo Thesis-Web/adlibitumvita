@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Logging out" noindex>
+  <p>Logging out…</p>
+  <script>
+    fetch("/api/auth/sign-out", { method: "POST" }).finally(() => {
+      window.location.href = "/";
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { searchLibrary } from "../../lib/search.js";
+
+const query = Astro.url.searchParams.get("q") ?? "";
+const results = query ? searchLibrary(query) : [];
+const collectionPath = { "captains-log": "captains-log", "beyond-the-map": "beyond-the-map" } as const;
+---
+
+<BaseLayout title="Search" noindex>
+  <h1>Search the Library</h1>
+  <form method="get" action="/library/search" class="field" style="display: flex; gap: 0.5rem; max-width: 28rem;">
+    <input type="search" name="q" value={query} placeholder="Search titles, prose, places…" />
+    <button class="btn" type="submit">Search</button>
+  </form>
+
+  {query && (
+    <p class="muted">{results.length} result{results.length === 1 ? "" : "s"} for "{query}"</p>
+  )}
+
+  <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
+    {results.map((result) => (
+      <li class="card">
+        <a href={`/library/${collectionPath[result.collection]}/${result.slug}`}>
+          <strong>{result.title}</strong>
+        </a>
+        <p class="muted">{result.collection === "captains-log" ? "Captain's Log" : "Beyond the Map"}</p>
+        <p set:html={result.snippet} />
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

@@ -1,0 +1,136 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description = "Ad Libitum Vita — live life unscripted.", noindex = false } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · Ad Libitum Vita</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --ink: #1b1a17;
+        --paper: #faf7f1;
+        --paper-raised: #ffffff;
+        --accent: #7a5c3e;
+        --muted: #6b6459;
+        --border: #e4ddce;
+        --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+      h1, h2, h3 { font-family: var(--serif); line-height: 1.2; }
+      a { color: var(--accent); }
+      header.site {
+        border-bottom: 1px solid var(--border);
+        background: var(--paper-raised);
+      }
+      header.site nav {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      header.site .brand {
+        font-family: var(--serif);
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-decoration: none;
+        color: var(--ink);
+        letter-spacing: 0.02em;
+      }
+      header.site .links { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+      header.site .links a { text-decoration: none; color: var(--ink); }
+      header.site .links a:hover { color: var(--accent); }
+      footer.site {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 2rem 1.25rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--border);
+      }
+      img { max-width: 100%; height: auto; }
+      .card {
+        background: var(--paper-raised);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1.25rem;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.6rem 1.1rem;
+        background: var(--ink);
+        color: var(--paper);
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+      .btn.secondary {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--border);
+      }
+      label { display: block; font-size: 0.85rem; margin-bottom: 0.3rem; color: var(--muted); }
+      input, textarea, select {
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 1rem;
+        background: var(--paper-raised);
+        color: var(--ink);
+      }
+      .field { margin-bottom: 1rem; }
+      .muted { color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <nav>
+        <a class="brand" href="/">Ad Libitum Vita</a>
+        <div class="links">
+          <a href="/library">Library</a>
+          <a href="/login">Login</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site">
+      <p>Ad Libitum Vita — live life unscripted.</p>
+    </footer>
+  </body>
+</html>

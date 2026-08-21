@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { listPublishedForLibrary } from "../../../lib/content.js";
+
+const entries = listPublishedForLibrary("beyond-the-map");
+---
+
+<BaseLayout title="Beyond the Map" noindex>
+  <h1>Beyond the Map</h1>
+  <p class="muted">The mindset behind an expedition.</p>
+
+  {entries.length === 0 ? (
+    <p class="muted">No entries published yet.</p>
+  ) : (
+    <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
+      {entries.map((entry) => (
+        <li class="card">
+          <a href={`/library/beyond-the-map/${entry.slug}`}><strong>{entry.title}</strong></a>
+          <p class="muted">
+            {entry.chapter_number != null && <span>Chapter {entry.chapter_number} · </span>}
+            {entry.section_number}
+          </p>
+          {entry.excerpt && <p>{entry.excerpt}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>

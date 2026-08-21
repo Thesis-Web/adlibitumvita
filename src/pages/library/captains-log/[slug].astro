@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPublishedEntryForLibrary } from "../../../lib/content.js";
+import { listMediaAssetsForContent } from "../../../lib/media-assets.js";
+import { renderMarkdown } from "../../../lib/markdown.js";
+
+const { slug } = Astro.params;
+const entry = slug ? getPublishedEntryForLibrary("captains-log", slug) : undefined;
+
+if (!entry) {
+  Astro.response.status = 404;
+}
+
+const assets = entry ? listMediaAssetsForContent(entry.id) : [];
+const bodyHtml = entry ? renderMarkdown(entry.body_markdown) : "";
+const tags = entry ? (JSON.parse(entry.tags_json) as string[]) : [];
+---
+
+<BaseLayout title={entry?.title ?? "Not found"} noindex>
+  {!entry ? (
+    <p>That entry couldn't be found.</p>
+  ) : (
+    <article>
+      <p class="muted"><a href="/library/captains-log">&larr; Captain's Log</a></p>
+      <h1>{entry.title}</h1>
+      {entry.subtitle && <p class="muted" style="font-size: 1.1rem;">{entry.subtitle}</p>}
+      <p class="muted">
+        {entry.day_number != null && <span>Day {entry.day_number} · </span>}
+        {entry.expedition_date && <span>{entry.expedition_date} · </span>}
+        {entry.location}
+      </p>
+
+      {assets.length > 0 && (
+        <div style="display: grid; gap: 0.5rem; margin: 1.5rem 0;">
+          {assets.map((asset) => (
+            <figure style="margin: 0;">
+              <img src={`/api/media/${asset.id}`} alt={asset.alt_text ?? ""} loading="lazy" width={asset.width ?? undefined} height={asset.height ?? undefined} />
+              {asset.caption && <figcaption class="muted">{asset.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+
+      <div set:html={bodyHtml} />
+
+      {tags.length > 0 && (
+        <p class="muted" style="margin-top: 2rem;">{tags.join(" · ")}</p>
+      )}
+    </article>
+  )}
+</BaseLayout>

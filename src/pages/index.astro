@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { listPublicTeasers } from "../lib/content.js";
+
+const captainsLog = listPublicTeasers("captains-log", 3);
+const beyondTheMap = listPublicTeasers("beyond-the-map", 3);
+---
+
+<BaseLayout title="Live Life Unscripted" description="Ad Libitum Vita — a family expedition, told as it happens, and the mindset behind it.">
+  <section>
+    <h1>Ad Libitum Vita</h1>
+    <p class="muted" style="font-size: 1.1rem; margin-top: -0.5rem;">live life unscripted</p>
+    <p>
+      This is the record of a family expedition — where we went, what broke, what we learned,
+      and the thinking that got us out the door in the first place. Some of it is public.
+      Most of the story lives in the library, for family and friends who've been given a key.
+    </p>
+  </section>
+
+  <section style="margin-top: 2.5rem;">
+    <h2>Captain's Log</h2>
+    <p class="muted">The expedition narrative — day by day, wherever "day" turns out to mean.</p>
+    {captainsLog.length === 0 ? (
+      <p class="muted">Entries are being written. Check back soon.</p>
+    ) : (
+      <ul style="list-style: none; padding: 0;">
+        {captainsLog.map((entry) => (
+          <li class="card" style="margin-bottom: 0.75rem;">
+            <a href={`/library/captains-log/${entry.slug}`}><strong>{entry.title}</strong></a>
+            {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section style="margin-top: 2.5rem;">
+    <h2>Beyond the Map</h2>
+    <p class="muted">The mindset behind an expedition.</p>
+    {beyondTheMap.length === 0 ? (
+      <p class="muted">Entries are being written. Check back soon.</p>
+    ) : (
+      <ul style="list-style: none; padding: 0;">
+        {beyondTheMap.map((entry) => (
+          <li class="card" style="margin-bottom: 0.75rem;">
+            <a href={`/library/beyond-the-map/${entry.slug}`}><strong>{entry.title}</strong></a>
+            {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section class="card" style="margin-top: 2.5rem;">
+    <h2 style="margin-top: 0;">Family &amp; friends</h2>
+    <p>The full library — every entry, every photo, searchable — is for people we've invited in.</p>
+    <a class="btn" href="/login">Member Login</a>
+  </section>
+</BaseLayout>

@@ -1,0 +1,283 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getContentEntryById, listRevisions } from "../../../lib/content.js";
+import { listMediaAssetsForContent } from "../../../lib/media-assets.js";
+
+const { id } = Astro.params;
+const entry = id ? getContentEntryById(id) : undefined;
+
+if (!entry) {
+  return new Response(null, { status: 404 });
+}
+
+const assets = listMediaAssetsForContent(entry.id);
+const revisions = listRevisions(entry.id);
+const tags = (JSON.parse(entry.tags_json) as string[]).join(", ");
+---
+
+<BaseLayout title={`Edit: ${entry.title}`} noindex>
+  <p class="muted"><a href="/admin/content">&larr; Content</a></p>
+  <h1>Edit Entry</h1>
+
+  <form id="entry-form" style="max-width: 40rem;" data-id={entry.id}>
+    <div class="field">
+      <label for="collection">Collection</label>
+      <select id="collection" name="collection" required>
+        <option value="captains-log" selected={entry.collection === "captains-log"}>Captain's Log</option>
+        <option value="beyond-the-map" selected={entry.collection === "beyond-the-map"}>Beyond the Map</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="title">Title</label>
+      <input id="title" name="title" required value={entry.title} />
+    </div>
+
+    <div class="field">
+      <label for="slug">Slug</label>
+      <input id="slug" name="slug" value={entry.slug} />
+    </div>
+
+    <div class="field">
+      <label for="subtitle">Subtitle</label>
+      <input id="subtitle" name="subtitle" value={entry.subtitle ?? ""} />
+    </div>
+
+    <div class="field">
+      <label for="excerpt">Excerpt</label>
+      <textarea id="excerpt" name="excerpt" rows="2">{entry.excerpt ?? ""}</textarea>
+    </div>
+
+    <div class="field">
+      <label for="body_markdown">Body (Markdown)</label>
+      <textarea id="body_markdown" name="body_markdown" rows="16" required>{entry.body_markdown}</textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="field">
+        <label for="day_number">Day number</label>
+        <input id="day_number" name="day_number" type="number" value={entry.day_number ?? ""} />
+      </div>
+      <div class="field">
+        <label for="chapter_number">Chapter number</label>
+        <input id="chapter_number" name="chapter_number" type="number" value={entry.chapter_number ?? ""} />
+      </div>
+      <div class="field">
+        <label for="section_number">Section</label>
+        <input id="section_number" name="section_number" value={entry.section_number ?? ""} />
+      </div>
+      <div class="field">
+        <label for="expedition_date">Expedition date</label>
+        <input id="expedition_date" name="expedition_date" type="date" value={entry.expedition_date ?? ""} />
+      </div>
+      <div class="field">
+        <label for="location">Location</label>
+        <input id="location" name="location" value={entry.location ?? ""} />
+      </div>
+      <div class="field">
+        <label for="tags">Tags (comma separated)</label>
+        <input id="tags" name="tags" value={tags} />
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="field">
+        <label for="visibility">Visibility</label>
+        <select id="visibility" name="visibility">
+          <option value="members" selected={entry.visibility === "members"}>Members</option>
+          <option value="public" selected={entry.visibility === "public"}>Public</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sort_order">Sort order</label>
+        <input id="sort_order" name="sort_order" type="number" step="any" value={entry.sort_order ?? ""} />
+      </div>
+    </div>
+
+    <p id="form-error" class="muted" style="color: #a33; display: none;"></p>
+    <p id="form-saved" class="muted" style="display: none;">Saved.</p>
+
+    <div style="display: flex; gap: 0.75rem;">
+      <button class="btn secondary" type="submit" data-status="draft">Save Draft</button>
+      <button class="btn" type="submit" data-status="published">
+        {entry.status === "published" ? "Update" : "Publish"}
+      </button>
+    </div>
+  </form>
+
+  <section style="margin-top: 2.5rem;">
+    <h2>Photos</h2>
+    <input type="file" id="media-input" multiple accept="image/*" />
+    <p id="upload-status" class="muted"></p>
+    <div id="media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 0.75rem; margin-top: 1rem;">
+      {assets.map((asset) => (
+        <div class="card" data-asset-id={asset.id} style="padding: 0.5rem;">
+          <img src={`/api/media/${asset.id}?size=thumb`} alt={asset.alt_text ?? ""} style="width: 100%; border-radius: 4px;" />
+          <input class="alt-input" placeholder="alt text" value={asset.alt_text ?? ""} style="margin-top: 0.4rem; font-size: 0.8rem;" />
+          <input class="caption-input" placeholder="caption" value={asset.caption ?? ""} style="margin-top: 0.3rem; font-size: 0.8rem;" />
+          <div style="display: flex; gap: 0.3rem; margin-top: 0.4rem; font-size: 0.8rem;">
+            <button type="button" class="btn secondary set-cover" style="flex: 1; padding: 0.3rem;">
+              {asset.is_cover ? "★ Cover" : "Set cover"}
+            </button>
+            <button type="button" class="btn secondary delete-asset" style="padding: 0.3rem;">✕</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section style="margin-top: 2.5rem;">
+    <h2>Revision history</h2>
+    {revisions.length === 0 ? (
+      <p class="muted">No revisions yet.</p>
+    ) : (
+      <ul style="list-style: none; padding: 0;">
+        {revisions.map((rev) => (
+          <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid var(--border);">
+            <span class="muted">rev {rev.revision_number} · {rev.created_at.slice(0, 16).replace("T", " ")}</span>
+            <button type="button" class="btn secondary restore-btn" data-rev={rev.revision_number} style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">Restore</button>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <script>
+    const form = document.getElementById("entry-form") as HTMLFormElement;
+    const contentId = form.dataset.id!;
+    const errorEl = document.getElementById("form-error") as HTMLElement;
+    const savedEl = document.getElementById("form-saved") as HTMLElement;
+
+    let submittedStatus = "draft";
+    form.querySelectorAll("button[type=submit]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        submittedStatus = (btn as HTMLElement).dataset.status ?? "draft";
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      errorEl.style.display = "none";
+      savedEl.style.display = "none";
+      const data = new FormData(form);
+
+      const payload = {
+        collection: data.get("collection"),
+        title: data.get("title"),
+        slug: data.get("slug"),
+        subtitle: (data.get("subtitle") as string) || null,
+        excerpt: (data.get("excerpt") as string) || null,
+        body_markdown: data.get("body_markdown"),
+        day_number: data.get("day_number") ? Number(data.get("day_number")) : null,
+        chapter_number: data.get("chapter_number") ? Number(data.get("chapter_number")) : null,
+        section_number: (data.get("section_number") as string) || null,
+        expedition_date: (data.get("expedition_date") as string) || null,
+        location: (data.get("location") as string) || null,
+        tags: (data.get("tags") as string)
+          ? (data.get("tags") as string).split(",").map((t) => t.trim()).filter(Boolean)
+          : [],
+        visibility: data.get("visibility"),
+        sort_order: data.get("sort_order") ? Number(data.get("sort_order")) : null,
+        status: submittedStatus,
+      };
+
+      const res = await fetch(`/api/admin/content/${contentId}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        errorEl.textContent = "Could not save entry.";
+        errorEl.style.display = "block";
+        return;
+      }
+      savedEl.style.display = "block";
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    // Media upload
+    const mediaInput = document.getElementById("media-input") as HTMLInputElement;
+    const uploadStatus = document.getElementById("upload-status") as HTMLElement;
+    mediaInput.addEventListener("change", async () => {
+      if (!mediaInput.files || mediaInput.files.length === 0) return;
+      const fd = new FormData();
+      for (const file of Array.from(mediaInput.files)) fd.append("files", file);
+
+      uploadStatus.textContent = `Uploading ${mediaInput.files.length} file(s)…`;
+      const res = await fetch(`/api/admin/content/${contentId}/media`, { method: "POST", body: fd });
+      uploadStatus.textContent = res.ok ? "Upload complete." : "Some uploads failed.";
+      if (res.ok) window.location.reload();
+    });
+
+    // Media grid actions
+    const grid = document.getElementById("media-grid") as HTMLElement;
+    grid.addEventListener("click", async (event) => {
+      const target = event.target as HTMLElement;
+      const card = target.closest("[data-asset-id]") as HTMLElement | null;
+      if (!card) return;
+      const assetId = card.dataset.assetId!;
+
+      if (target.classList.contains("set-cover")) {
+        await fetch(`/api/admin/media/${assetId}`, {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ isCover: true }),
+        });
+        window.location.reload();
+      }
+
+      if (target.classList.contains("delete-asset")) {
+        if (!confirm("Remove this photo?")) return;
+        await fetch(`/api/admin/media/${assetId}`, { method: "DELETE" });
+        card.remove();
+      }
+    });
+
+    grid.addEventListener(
+      "blur",
+      async (event) => {
+        const target = event.target as HTMLElement;
+        const card = target.closest("[data-asset-id]") as HTMLElement | null;
+        if (!card) return;
+        const assetId = card.dataset.assetId!;
+
+        if (target.classList.contains("alt-input")) {
+          await fetch(`/api/admin/media/${assetId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ altText: (target as HTMLInputElement).value }),
+          });
+        }
+        if (target.classList.contains("caption-input")) {
+          await fetch(`/api/admin/media/${assetId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ caption: (target as HTMLInputElement).value }),
+          });
+        }
+      },
+      true,
+    );
+
+    // Revision restore
+    document.querySelectorAll(".restore-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const revisionNumber = Number((btn as HTMLElement).dataset.rev);
+        if (!confirm(`Restore revision ${revisionNumber}? This creates a new revision from the old snapshot.`)) return;
+        const res = await fetch(`/api/admin/content/${contentId}/restore`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ revision_number: revisionNumber }),
+        });
+        if (res.ok) window.location.reload();
+      });
+    });
+  </script>
+</BaseLayout>

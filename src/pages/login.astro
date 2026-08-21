@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+if (Astro.locals.user) {
+  return Astro.redirect("/library");
+}
+
+const next = Astro.url.searchParams.get("next") ?? "/library";
+---
+
+<BaseLayout title="Login" noindex>
+  <h1>Login</h1>
+  <p class="muted">Accounts are created by the family. There is no public sign-up.</p>
+
+  <form id="login-form" class="card" style="max-width: 24rem;">
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" />
+    </div>
+    <p id="login-error" class="muted" style="color: #a33; display: none;"></p>
+    <button class="btn" type="submit">Log in</button>
+  </form>
+
+  <script is:inline define:vars={{ next }}>
+    const form = document.getElementById("login-form");
+    const errorEl = document.getElementById("login-error");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      errorEl.style.display = "none";
+      const formData = new FormData(form);
+
+      const res = await fetch("/api/auth/sign-in/email", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          password: formData.get("password"),
+        }),
+      });
+
+      if (res.ok) {
+        window.location.href = next;
+        return;
+      }
+
+      const body = await res.json().catch(() => ({}));
+      errorEl.textContent = body.message ?? "Login failed. Check your email and password.";
+      errorEl.style.display = "block";
+    });
+  </script>
+</BaseLayout>
