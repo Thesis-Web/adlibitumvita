@@ -31,12 +31,49 @@ export interface ContentEntry {
   source_type: string | null;
   source_ref: string | null;
   source_hash: string | null;
+  public_preview_markdown: string | null;
+  seo_title: string | null;
+  meta_description: string | null;
+  indexable: 0 | 1;
+  original_day_label: string | null;
 }
 
 export type PublicTeaser = Pick<
   ContentEntry,
   "id" | "collection" | "slug" | "title" | "subtitle" | "excerpt" | "expedition_date" | "location" | "published_at"
 >;
+
+/**
+ * Public-safe detail-page projection. MUST NOT include body_markdown — public routes
+ * query this type exclusively so the full gated body can never leak into a public
+ * response, per the content-gating rule in CLAUDE.md §8.
+ */
+export type PublicEntryDetail = Pick<
+  ContentEntry,
+  | "id"
+  | "collection"
+  | "slug"
+  | "title"
+  | "subtitle"
+  | "excerpt"
+  | "public_preview_markdown"
+  | "seo_title"
+  | "meta_description"
+  | "indexable"
+  | "day_number"
+  | "original_day_label"
+  | "expedition_date"
+  | "location"
+  | "tags_json"
+  | "published_at"
+  | "updated_at"
+>;
+
+const PUBLIC_ENTRY_DETAIL_COLUMNS = `
+  id, collection, slug, title, subtitle, excerpt, public_preview_markdown, seo_title,
+  meta_description, indexable, day_number, original_day_label, expedition_date, location,
+  tags_json, published_at, updated_at
+`;
 
 export interface ContentEntryInput {
   collection: Collection;
@@ -57,6 +94,11 @@ export interface ContentEntryInput {
   source_type?: string | null;
   source_ref?: string | null;
   source_hash?: string | null;
+  public_preview_markdown?: string | null;
+  seo_title?: string | null;
+  meta_description?: string | null;
+  indexable?: 0 | 1;
+  original_day_label?: string | null;
 }
 
 function slugExists(db: ReturnType<typeof getDb>, candidate: string, excludeId?: string): boolean {
@@ -115,6 +157,11 @@ export function createContentEntry(input: ContentEntryInput, actorUserId: string
     source_type: input.source_type ?? null,
     source_ref: input.source_ref ?? null,
     source_hash: input.source_hash ?? null,
+    public_preview_markdown: input.public_preview_markdown ?? null,
+    seo_title: input.seo_title ?? null,
+    meta_description: input.meta_description ?? null,
+    indexable: input.indexable ?? 1,
+    original_day_label: input.original_day_label ?? null,
   };
 
   const run = db.transaction(() => {
@@ -123,12 +170,14 @@ export function createContentEntry(input: ContentEntryInput, actorUserId: string
         id, collection, slug, title, subtitle, excerpt, body_markdown, status, visibility,
         day_number, chapter_number, section_number, expedition_date, location, tags_json,
         sort_order, published_at, created_at, updated_at, created_by, updated_by,
-        source_type, source_ref, source_hash
+        source_type, source_ref, source_hash,
+        public_preview_markdown, seo_title, meta_description, indexable, original_day_label
       ) VALUES (
         @id, @collection, @slug, @title, @subtitle, @excerpt, @body_markdown, @status, @visibility,
         @day_number, @chapter_number, @section_number, @expedition_date, @location, @tags_json,
         @sort_order, @published_at, @created_at, @updated_at, @created_by, @updated_by,
-        @source_type, @source_ref, @source_hash
+        @source_type, @source_ref, @source_hash,
+        @public_preview_markdown, @seo_title, @meta_description, @indexable, @original_day_label
       )`,
     ).run(entry);
     snapshotAndRevise(db, entry, actorUserId);
@@ -177,6 +226,13 @@ export function updateContentEntry(
     source_type: patch.source_type !== undefined ? patch.source_type : existing.source_type,
     source_ref: patch.source_ref !== undefined ? patch.source_ref : existing.source_ref,
     source_hash: patch.source_hash !== undefined ? patch.source_hash : existing.source_hash,
+    public_preview_markdown:
+      patch.public_preview_markdown !== undefined ? patch.public_preview_markdown : existing.public_preview_markdown,
+    seo_title: patch.seo_title !== undefined ? patch.seo_title : existing.seo_title,
+    meta_description: patch.meta_description !== undefined ? patch.meta_description : existing.meta_description,
+    indexable: patch.indexable !== undefined ? patch.indexable : existing.indexable,
+    original_day_label:
+      patch.original_day_label !== undefined ? patch.original_day_label : existing.original_day_label,
   };
 
   const run = db.transaction(() => {
@@ -187,7 +243,9 @@ export function updateContentEntry(
         day_number = @day_number, chapter_number = @chapter_number, section_number = @section_number,
         expedition_date = @expedition_date, location = @location, tags_json = @tags_json,
         sort_order = @sort_order, published_at = @published_at, updated_at = @updated_at,
-        updated_by = @updated_by, source_type = @source_type, source_ref = @source_ref, source_hash = @source_hash
+        updated_by = @updated_by, source_type = @source_type, source_ref = @source_ref, source_hash = @source_hash,
+        public_preview_markdown = @public_preview_markdown, seo_title = @seo_title,
+        meta_description = @meta_description, indexable = @indexable, original_day_label = @original_day_label
       WHERE id = @id`,
     ).run(updated);
     snapshotAndRevise(db, updated, actorUserId);
@@ -255,6 +313,74 @@ export function listPublicTeasers(collection: Collection, limit = 6): PublicTeas
     .all(collection, limit);
 }
 
+/**
+ * Public-safe detail page lookup — deliberately never selects body_markdown. This is the
+ * only function public routes (/captains-log/**) should use to fetch a single entry.
+ */
+export function getPublicEntryDetail(collection: Collection, slug: string): PublicEntryDetail | undefined {
+  return getDb()
+    .prepare<
+      [Collection, string],
+      PublicEntryDetail
+    >(
+      `SELECT ${PUBLIC_ENTRY_DETAIL_COLUMNS} FROM content_entries
+       WHERE collection = ? AND slug = ? AND status = 'published' AND visibility = 'public'`,
+    )
+    .get(collection, slug);
+}
+
+/** Public-safe list for /captains-log — ordered by canonical day number. */
+export function listPublicEntries(collection: Collection): PublicEntryDetail[] {
+  return getDb()
+    .prepare<
+      [Collection],
+      PublicEntryDetail
+    >(
+      `SELECT ${PUBLIC_ENTRY_DETAIL_COLUMNS} FROM content_entries
+       WHERE collection = ? AND status = 'published' AND visibility = 'public'
+       ORDER BY day_number IS NULL, day_number, published_at`,
+    )
+    .all(collection);
+}
+
+export interface PublicNeighbor {
+  slug: string;
+  title: string;
+  day_number: number | null;
+}
+
+/** Previous/next navigation among public+published entries, ordered by canonical day number. */
+export function getPublicNeighbors(
+  collection: Collection,
+  dayNumber: number | null,
+): { previous: PublicNeighbor | null; next: PublicNeighbor | null } {
+  if (dayNumber == null) return { previous: null, next: null };
+  const db = getDb();
+  const previous =
+    db
+      .prepare<
+        [Collection, number],
+        PublicNeighbor
+      >(
+        `SELECT slug, title, day_number FROM content_entries
+         WHERE collection = ? AND status = 'published' AND visibility = 'public' AND day_number < ?
+         ORDER BY day_number DESC LIMIT 1`,
+      )
+      .get(collection, dayNumber) ?? null;
+  const next =
+    db
+      .prepare<
+        [Collection, number],
+        PublicNeighbor
+      >(
+        `SELECT slug, title, day_number FROM content_entries
+         WHERE collection = ? AND status = 'published' AND visibility = 'public' AND day_number > ?
+         ORDER BY day_number ASC LIMIT 1`,
+      )
+      .get(collection, dayNumber) ?? null;
+  return { previous, next };
+}
+
 export function listPublishedForLibrary(collection: Collection): ContentEntry[] {
   return getDb()
     .prepare<
@@ -314,6 +440,11 @@ export function restoreRevision(contentId: string, revisionNumber: number, actor
       location: snapshot.location,
       tags: JSON.parse(snapshot.tags_json) as string[],
       sort_order: snapshot.sort_order,
+      public_preview_markdown: snapshot.public_preview_markdown,
+      seo_title: snapshot.seo_title,
+      meta_description: snapshot.meta_description,
+      indexable: snapshot.indexable,
+      original_day_label: snapshot.original_day_label,
     },
     actorUserId,
   );

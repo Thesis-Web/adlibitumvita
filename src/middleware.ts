@@ -48,6 +48,7 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   const response = await next();
   if (isLibrary || isAdminRoute) {
     response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    response.headers.set("Cache-Control", "private, no-store");
   }
   return response;
 });

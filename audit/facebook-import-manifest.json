@@ -1,0 +1,1027 @@
+{
+  "status": "SUPERSEDES the original 42-day-labeled manifest per human editorial review (see REVISION_HISTORY).",
+  "revision_history": [
+    {
+      "change": "Canonical day renumbering from actual narrative chronology",
+      "detail": "The original Facebook Day-number labels are NOT authoritative (human review: the author confirms Day-number bookkeeping was unreliable while traveling). The canonical website sequence is instead built from narrative chronology: splits/continuations merge into one canonical day (no change from v1), and the original conflicting 'Day 13' label -- which actually described two sequential, non-overlapping expedition days -- is split into canonical Days 13 and 14, per the human-approved geographic sequence: Kluane Lake -> Alaska border -> Copper Center -> McCarthy Road -> McCarthy overnight -> Kennicott/Root Glacier. This shifts everything from the original Day 14 onward by +1. Total canonical entries: 43 (up from the apparent 42 in the original labels). original_day_label and canonical_day_number are preserved as separate fields on every entry."
+    },
+    {
+      "change": "Log-date parser defect fixed",
+      "detail": "v1 of this manifest incorrectly populated 'stated_dates' with the Facebook POST timestamp's calendar date, not the Captain's Log's own stated date. For Days 1-8 (canonical 1-8), which explicitly state a date in the text header (e.g. 'Captain's Log 6-20-26'), this was often several days wrong -- e.g. canonical Day 1 states 2026-06-20 in text but was posted to Facebook on 2026-06-23 (a 3-day backlog gap). This is now fixed: 'log_date' is parsed from the post's own text (M-D-YY or, for later formats, a bare 'Month D' header) and is null when no date is stated in text -- which is the case for all of canonical Days 9-43, which state only 'Day N' with no calendar date anywhere in the post. 'facebook_published_at' is preserved separately as metadata on every entry and is NEVER substituted for a missing log_date."
+    }
+  ],
+  "summary": {
+    "total_canonical_entries": 43,
+    "original_apparent_day_range": "1-42",
+    "canonical_day_range": "1-43",
+    "entries_with_explicit_log_date": 8,
+    "entries_without_explicit_log_date": 35,
+    "day_13_resolution": "Original conflicting 'Day 13' label split into canonical Days 13 and 14 per human editorial decision (geographic sequence: Kluane Lake -> Alaska border -> Copper Center -> McCarthy Road -> McCarthy overnight -> Kennicott/Root Glacier). Everything from the original Day 14 onward shifts +1."
+  },
+  "canonical_day_entries": [
+    {
+      "canonical_day_number": 1,
+      "original_day_label": "1",
+      "log_date": "2026-06-20",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 84,
+          "facebook_published_at": "2026-06-23T02:17:45+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 2507,
+      "total_media_count": 3,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log 6-20-26"
+      ]
+    },
+    {
+      "canonical_day_number": 2,
+      "original_day_label": "2",
+      "log_date": "2026-06-21",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 83,
+          "facebook_published_at": "2026-06-23T04:52:59+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 3881,
+      "total_media_count": 3,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log 6-21-26"
+      ]
+    },
+    {
+      "canonical_day_number": 3,
+      "original_day_label": "3",
+      "log_date": "2026-06-22",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 82,
+          "facebook_published_at": "2026-06-24T00:08:01+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 9185,
+      "total_media_count": 2,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 4,
+      "original_first_lines": [
+        "Captain's Log 6-22-26"
+      ]
+    },
+    {
+      "canonical_day_number": 4,
+      "original_day_label": "4",
+      "log_date": "2026-06-23",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 75,
+          "facebook_published_at": "2026-06-25T05:37:41+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 7118,
+      "total_media_count": 28,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 6,
+      "original_first_lines": [
+        "Captain's Log 6-23-26"
+      ]
+    },
+    {
+      "canonical_day_number": 5,
+      "original_day_label": "5",
+      "log_date": "2026-06-24",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 73,
+          "facebook_published_at": "2026-06-25T06:31:32+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 5289,
+      "total_media_count": 18,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 6,
+      "original_first_lines": [
+        "\"Captain's Log 6-24-26"
+      ]
+    },
+    {
+      "canonical_day_number": 6,
+      "original_day_label": "6",
+      "log_date": "2026-06-25",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 70,
+          "facebook_published_at": "2026-06-26T15:49:26+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 4279,
+      "total_media_count": 9,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log 6-25-26"
+      ]
+    },
+    {
+      "canonical_day_number": 7,
+      "original_day_label": "7",
+      "log_date": "2026-06-26",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 67,
+          "facebook_published_at": "2026-06-27T17:43:07+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 8791,
+      "total_media_count": 1,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 4,
+      "original_first_lines": [
+        "Captain's Log- 6-26-26"
+      ]
+    },
+    {
+      "canonical_day_number": 8,
+      "original_day_label": "8",
+      "log_date": "2026-06-27",
+      "log_date_source": "header-mdy",
+      "log_date_confidence": "high",
+      "log_date_note": null,
+      "facebook_published_at": [
+        {
+          "post_index": 64,
+          "facebook_published_at": "2026-06-28T23:58:47+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": "idx63 is a short Instagram-style cross-post referencing \"Day 8\" in its caption; idx64 is the full Captain's Log entry. Not a split — idx63 is a same-day supplemental aside.",
+      "total_body_chars": 7442,
+      "total_media_count": 17,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log – 6-27-26"
+      ]
+    },
+    {
+      "canonical_day_number": 9,
+      "original_day_label": "9",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 62,
+          "facebook_published_at": "2026-06-29T21:14:32+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 8622,
+      "total_media_count": 14,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 2,
+      "original_first_lines": [
+        "Captain's Log — Day 9"
+      ]
+    },
+    {
+      "canonical_day_number": 10,
+      "original_day_label": "10",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 59,
+          "facebook_published_at": "2026-06-30T21:29:01+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": "idx58 is explicitly self-labeled \"(an aside)\" — a same-day reflection on finances/reader support with Venmo/PayPal links, not a continuation of the Day 10 narrative.",
+      "total_body_chars": 26348,
+      "total_media_count": 16,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log — Day 10"
+      ]
+    },
+    {
+      "canonical_day_number": 11,
+      "original_day_label": "11",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 55,
+          "facebook_published_at": "2026-07-02T16:45:37+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 17881,
+      "total_media_count": 27,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Day 11 — The Last Harbor"
+      ]
+    },
+    {
+      "canonical_day_number": 12,
+      "original_day_label": "12",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 54,
+          "facebook_published_at": "2026-07-03T21:32:23+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 27826,
+      "total_media_count": 30,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 12"
+      ]
+    },
+    {
+      "canonical_day_number": 13,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 51,
+          "facebook_published_at": "2026-07-05T21:09:00+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": "Human-approved split of the original conflicting 'Day 13' label. This entry covers Kluane Lake, Yukon through the Alaska border crossing ('Welcome to Alaska'). Chronologically precedes the McCarthy Road entry below.",
+      "total_body_chars": 2843,
+      "total_media_count": 14,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Day 13 — The Final Test Before Alaska"
+      ]
+    },
+    {
+      "canonical_day_number": 14,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 53,
+          "facebook_published_at": "2026-07-05T05:13:14+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": "Human-approved split of the original conflicting 'Day 13' label. This entry covers Copper Center, Alaska (already inside the state) through the McCarthy Road and McCarthy overnight. idx50/idx52 (previously ambiguous between Day 13/Day 14 by date-co-occurrence) are assigned here on content grounds (Kennecott/Root Glacier subject matter matches this entry, not the original Day 14 'Crossing Into Another Century' entry which narrates the *next* morning after this one).",
+      "total_body_chars": 10448,
+      "total_media_count": 12,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 2,
+      "original_first_lines": [
+        "Captain’s Log — Day 13"
+      ]
+    },
+    {
+      "canonical_day_number": 15,
+      "original_day_label": "14",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 49,
+          "facebook_published_at": "2026-07-05T21:39:56+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 16399,
+      "total_media_count": 30,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 2,
+      "original_first_lines": [
+        "Captain's Log - Day 14"
+      ]
+    },
+    {
+      "canonical_day_number": 16,
+      "original_day_label": "15",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 48,
+          "facebook_published_at": "2026-07-06T22:27:01+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 11545,
+      "total_media_count": 13,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log- Day 15"
+      ]
+    },
+    {
+      "canonical_day_number": 17,
+      "original_day_label": "16",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 46,
+          "facebook_published_at": "2026-07-07T20:34:39+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 8448,
+      "total_media_count": 11,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Day 16 — Captain's Log"
+      ]
+    },
+    {
+      "canonical_day_number": 18,
+      "original_day_label": "17",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 45,
+          "facebook_published_at": "2026-07-08T20:20:56+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 12459,
+      "total_media_count": 13,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log — Day 17"
+      ]
+    },
+    {
+      "canonical_day_number": 19,
+      "original_day_label": "18",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 43,
+          "facebook_published_at": "2026-07-09T23:22:12+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 10079,
+      "total_media_count": 16,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log – Day 18: Where the River Felt Like Home"
+      ]
+    },
+    {
+      "canonical_day_number": 20,
+      "original_day_label": "19",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 42,
+          "facebook_published_at": "2026-07-11T05:40:14+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 2542,
+      "total_media_count": 4,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log — Day 19"
+      ]
+    },
+    {
+      "canonical_day_number": 21,
+      "original_day_label": "20",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 41,
+          "facebook_published_at": "2026-07-11T06:52:26+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 23710,
+      "total_media_count": 4,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain’s Log — Day 20"
+      ]
+    },
+    {
+      "canonical_day_number": 22,
+      "original_day_label": "21",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 40,
+          "facebook_published_at": "2026-07-12T18:16:33+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 15389,
+      "total_media_count": 7,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 21"
+      ]
+    },
+    {
+      "canonical_day_number": 23,
+      "original_day_label": "22",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 39,
+          "facebook_published_at": "2026-07-14T19:53:38+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 13433,
+      "total_media_count": 17,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 22"
+      ]
+    },
+    {
+      "canonical_day_number": 24,
+      "original_day_label": "23",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 38,
+          "facebook_published_at": "2026-07-14T21:02:35+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 17305,
+      "total_media_count": 7,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log – Day 23"
+      ]
+    },
+    {
+      "canonical_day_number": 25,
+      "original_day_label": "24",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 36,
+          "facebook_published_at": "2026-07-16T08:08:35+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 8313,
+      "total_media_count": 5,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 24"
+      ]
+    },
+    {
+      "canonical_day_number": 26,
+      "original_day_label": "25",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 35,
+          "facebook_published_at": "2026-07-16T23:58:39+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 45918,
+      "total_media_count": 10,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain’s Log — Day 25"
+      ]
+    },
+    {
+      "canonical_day_number": 27,
+      "original_day_label": "26",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 34,
+          "facebook_published_at": "2026-07-18T07:12:08+00:00"
+        },
+        {
+          "post_index": 33,
+          "facebook_published_at": "2026-07-18T07:23:02+00:00"
+        }
+      ],
+      "is_split_merge": true,
+      "resolution_note": "Explicit split: idx34 ends \"Continued....\"; idx33 opens \"Evidently, I wrote longer than Facebook will allow. Continued... Captain's Log Day 26, Chapter Fourteen.\" Canonical merge order: idx34 then idx33.",
+      "total_body_chars": 55271,
+      "total_media_count": 0,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain’s Log — Day 26",
+        "Evidently, I wrote longer than Facebook will allow. "
+      ]
+    },
+    {
+      "canonical_day_number": 28,
+      "original_day_label": "27",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 32,
+          "facebook_published_at": "2026-07-19T06:12:14+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 13412,
+      "total_media_count": 16,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log - Day 27 - The River That Looked Back "
+      ]
+    },
+    {
+      "canonical_day_number": 29,
+      "original_day_label": "28",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 30,
+          "facebook_published_at": "2026-07-20T04:51:57+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 15919,
+      "total_media_count": 21,
+      "has_same_day_supplemental_posts": true,
+      "same_day_supplemental_post_count": 1,
+      "original_first_lines": [
+        "Captain's Log Day 28 - An Ad Libitum Day"
+      ]
+    },
+    {
+      "canonical_day_number": 30,
+      "original_day_label": "29",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 29,
+          "facebook_published_at": "2026-07-21T06:14:24+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 12424,
+      "total_media_count": 12,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log – Day 29"
+      ]
+    },
+    {
+      "canonical_day_number": 31,
+      "original_day_label": "30",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 28,
+          "facebook_published_at": "2026-07-22T00:53:15+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 18750,
+      "total_media_count": 12,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain’s Log — Day 30 Freedom to Wander"
+      ]
+    },
+    {
+      "canonical_day_number": 32,
+      "original_day_label": "31",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 27,
+          "facebook_published_at": "2026-07-22T20:17:02+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 16781,
+      "total_media_count": 13,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 31 At the Edge of the Map"
+      ]
+    },
+    {
+      "canonical_day_number": 33,
+      "original_day_label": "32",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 26,
+          "facebook_published_at": "2026-07-24T09:02:57+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 25614,
+      "total_media_count": 11,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log – Day 32"
+      ]
+    },
+    {
+      "canonical_day_number": 34,
+      "original_day_label": "33",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 25,
+          "facebook_published_at": "2026-07-26T21:18:47+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 41645,
+      "total_media_count": 19,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain’s Log — Day 33 The Long Road Home"
+      ]
+    },
+    {
+      "canonical_day_number": 35,
+      "original_day_label": "34",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 22,
+          "facebook_published_at": "2026-07-30T00:14:21+00:00"
+        },
+        {
+          "post_index": 21,
+          "facebook_published_at": "2026-07-30T03:35:51+00:00"
+        }
+      ],
+      "is_split_merge": true,
+      "resolution_note": "Explicit continuation: idx21 title is literally \"Captain's Log Day 34 - continued...\". Canonical merge order: idx22 then idx21.",
+      "total_body_chars": 51562,
+      "total_media_count": 18,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captains Log Day 34",
+        "Captain's Log Day 34 - continued..."
+      ]
+    },
+    {
+      "canonical_day_number": 36,
+      "original_day_label": "35",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 20,
+          "facebook_published_at": "2026-08-02T21:58:07+00:00"
+        },
+        {
+          "post_index": 19,
+          "facebook_published_at": "2026-08-02T22:30:58+00:00"
+        }
+      ],
+      "is_split_merge": true,
+      "resolution_note": "Explicit continuation: idx20 ends with an editor's note about a business/monetization tangent; idx19 opens \"Now that we have the business stuff done. We can get back to the log you enjoy.\" Canonical merge order: idx20 then idx19.",
+      "total_body_chars": 51638,
+      "total_media_count": 13,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captains Log Day 35",
+        "Captains log day 35"
+      ]
+    },
+    {
+      "canonical_day_number": 37,
+      "original_day_label": "36",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 18,
+          "facebook_published_at": "2026-08-05T01:39:05+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 20508,
+      "total_media_count": 10,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain’s Log — Day 36 "
+      ]
+    },
+    {
+      "canonical_day_number": 38,
+      "original_day_label": "37",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 16,
+          "facebook_published_at": "2026-08-08T18:50:31+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 12294,
+      "total_media_count": 9,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log — Day 37"
+      ]
+    },
+    {
+      "canonical_day_number": 39,
+      "original_day_label": "38",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 15,
+          "facebook_published_at": "2026-08-08T19:06:54+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 4869,
+      "total_media_count": 12,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "I had no Internet where we were so today it's a \"two-fer\". Remember daily posts are on patreon, here"
+      ]
+    },
+    {
+      "canonical_day_number": 40,
+      "original_day_label": "39",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 14,
+          "facebook_published_at": "2026-08-10T22:11:25+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 7378,
+      "total_media_count": 14,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log - Day 39- Breaking The Mold"
+      ]
+    },
+    {
+      "canonical_day_number": 41,
+      "original_day_label": "40",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 11,
+          "facebook_published_at": "2026-08-13T21:24:24+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 14280,
+      "total_media_count": 28,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log Day 40: Mesa Verde "
+      ]
+    },
+    {
+      "canonical_day_number": 42,
+      "original_day_label": "41",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 8,
+          "facebook_published_at": "2026-08-17T01:20:56+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 17523,
+      "total_media_count": 12,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log Day 41 — Moab, Utah"
+      ]
+    },
+    {
+      "canonical_day_number": 43,
+      "original_day_label": "42",
+      "log_date": null,
+      "log_date_source": null,
+      "log_date_confidence": null,
+      "log_date_note": "No calendar date stated in text; do NOT substitute facebook_published_at.",
+      "facebook_published_at": [
+        {
+          "post_index": 6,
+          "facebook_published_at": "2026-08-21T04:19:00+00:00"
+        }
+      ],
+      "is_split_merge": false,
+      "resolution_note": null,
+      "total_body_chars": 12085,
+      "total_media_count": 20,
+      "has_same_day_supplemental_posts": false,
+      "same_day_supplemental_post_count": 0,
+      "original_first_lines": [
+        "Captain's Log Day 42 — Borrowed Time"
+      ]
+    }
+  ]
+}

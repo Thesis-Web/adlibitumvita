@@ -1,0 +1,177 @@
+{
+  "note": "Cross-reference for translating original Facebook Day-number labels (used throughout editorial-findings.json and captains-log-continuity-registry.json, since those were produced by close-reading passes keyed to the original labels) into the canonical website Day numbers established after human editorial review. Only canonical Day 13 is a 1-to-2 split (original label 13 covers both canonical Day 13 and canonical Day 14); every other canonical day number is either equal to (Days 1-12) or exactly one greater than (canonical Days 15-43) its original label.",
+  "mapping": [
+    {
+      "canonical_day_number": 1,
+      "original_day_label": "1"
+    },
+    {
+      "canonical_day_number": 2,
+      "original_day_label": "2"
+    },
+    {
+      "canonical_day_number": 3,
+      "original_day_label": "3"
+    },
+    {
+      "canonical_day_number": 4,
+      "original_day_label": "4"
+    },
+    {
+      "canonical_day_number": 5,
+      "original_day_label": "5"
+    },
+    {
+      "canonical_day_number": 6,
+      "original_day_label": "6"
+    },
+    {
+      "canonical_day_number": 7,
+      "original_day_label": "7"
+    },
+    {
+      "canonical_day_number": 8,
+      "original_day_label": "8"
+    },
+    {
+      "canonical_day_number": 9,
+      "original_day_label": "9"
+    },
+    {
+      "canonical_day_number": 10,
+      "original_day_label": "10"
+    },
+    {
+      "canonical_day_number": 11,
+      "original_day_label": "11"
+    },
+    {
+      "canonical_day_number": 12,
+      "original_day_label": "12"
+    },
+    {
+      "canonical_day_number": 13,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)"
+    },
+    {
+      "canonical_day_number": 14,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)"
+    },
+    {
+      "canonical_day_number": 15,
+      "original_day_label": "14"
+    },
+    {
+      "canonical_day_number": 16,
+      "original_day_label": "15"
+    },
+    {
+      "canonical_day_number": 17,
+      "original_day_label": "16"
+    },
+    {
+      "canonical_day_number": 18,
+      "original_day_label": "17"
+    },
+    {
+      "canonical_day_number": 19,
+      "original_day_label": "18"
+    },
+    {
+      "canonical_day_number": 20,
+      "original_day_label": "19"
+    },
+    {
+      "canonical_day_number": 21,
+      "original_day_label": "20"
+    },
+    {
+      "canonical_day_number": 22,
+      "original_day_label": "21"
+    },
+    {
+      "canonical_day_number": 23,
+      "original_day_label": "22"
+    },
+    {
+      "canonical_day_number": 24,
+      "original_day_label": "23"
+    },
+    {
+      "canonical_day_number": 25,
+      "original_day_label": "24"
+    },
+    {
+      "canonical_day_number": 26,
+      "original_day_label": "25"
+    },
+    {
+      "canonical_day_number": 27,
+      "original_day_label": "26"
+    },
+    {
+      "canonical_day_number": 28,
+      "original_day_label": "27"
+    },
+    {
+      "canonical_day_number": 29,
+      "original_day_label": "28"
+    },
+    {
+      "canonical_day_number": 30,
+      "original_day_label": "29"
+    },
+    {
+      "canonical_day_number": 31,
+      "original_day_label": "30"
+    },
+    {
+      "canonical_day_number": 32,
+      "original_day_label": "31"
+    },
+    {
+      "canonical_day_number": 33,
+      "original_day_label": "32"
+    },
+    {
+      "canonical_day_number": 34,
+      "original_day_label": "33"
+    },
+    {
+      "canonical_day_number": 35,
+      "original_day_label": "34"
+    },
+    {
+      "canonical_day_number": 36,
+      "original_day_label": "35"
+    },
+    {
+      "canonical_day_number": 37,
+      "original_day_label": "36"
+    },
+    {
+      "canonical_day_number": 38,
+      "original_day_label": "37"
+    },
+    {
+      "canonical_day_number": 39,
+      "original_day_label": "38"
+    },
+    {
+      "canonical_day_number": 40,
+      "original_day_label": "39"
+    },
+    {
+      "canonical_day_number": 41,
+      "original_day_label": "40"
+    },
+    {
+      "canonical_day_number": 42,
+      "original_day_label": "41"
+    },
+    {
+      "canonical_day_number": 43,
+      "original_day_label": "42"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "methodology": "Findings were produced by two independent close-reading passes over the full expedition-window Captain's Log text (Days 1-21, then Days 22-42, chronologically), cross-checking the second pass against the first pass's registry so cross-batch repetition could be detected. Excerpts below are kept to a single sentence or short phrase per finding, per the audit's public-safety constraint; full paragraph-length source text is not reproduced here. No source content was edited. NOTE: day numbers cited in the 'days' fields below are the ORIGINAL Facebook-post-labeled day numbers, not canonical website Day numbers — see day-number-mapping.json for the translation table (only original label 13 requires special handling, since it splits into canonical Days 13 and 14).",
+  "counts": {
+    "total_findings": 18,
+    "by_confidence": { "HIGH": 9, "MEDIUM": 6, "LOW": 3 },
+    "by_classification": { "EDITORIAL_RECOMMENDATION": 8, "JUDGMENT_CALL": 6, "SAFE_NORMALIZATION": 4 },
+    "by_recommendation": { "MERGE": 4, "SHORTEN": 3, "REVIEW": 9, "RESOLVED": 1, "DELETE": 0, "KEEP": 0 }
+  },
+  "findings": [
+    {
+      "id": "EF-01", "category": "duplicate_passage", "days": [10],
+      "excerpts": [
+        "Day 10 primary (Ch. 8): \"A hundred-dollar dinner isn't simply a hundred-dollar dinner... We've slowly stopped measuring money in dollars. We measure it in days.\"",
+        "Day 10 same-day aside ('Wealth'): \"A hundred-dollar dinner isn't simply a hundred-dollar dinner... We've stopped measuring money in dollars. We measure it in time.\""
+      ],
+      "explanation": "The Day 10 primary entry and its same-day supplemental 'Wealth' aside make the identical argument with the identical central image within hours of each other.",
+      "recommendation": "MERGE", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF-02", "category": "recurring_framing_device", "days": [10, 15],
+      "excerpts": ["\"We've stopped measuring money in dollars. We measure it in time.\" (Day 10)", "\"Money is time's shadow.\" (Day 15)"],
+      "explanation": "The 'money is really time' thesis gets a full second two-chapter treatment on Day 15, five days after being fully argued on Day 10.",
+      "recommendation": "SHORTEN", "confidence": "MEDIUM", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF-03", "category": "cumulative_recap", "days": [11, 12],
+      "excerpts": ["\"Texas had taught us to begin... Glacier, Banff, and Jasper taught us humility.\" (Day 11)", "\"We covered this yesterday, but...\" (Day 12, Ch. 3 — self-acknowledged repeat, then repeats anyway)"],
+      "explanation": "The same state-by-state route recap is given four times within two days, including one instance where the text itself flags the repeat and continues anyway.",
+      "recommendation": "MERGE", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF-04", "category": "source_data_defect", "days": [13],
+      "excerpts": ["idx51 wakes at Kluane Lake, Yukon and ends \"Welcome to Alaska.\"", "idx53 wakes \"beside a river near Copper Center, Alaska\" (already inside the state)."],
+      "explanation": "Two posts both self-label Day 13 but describe sequential, non-overlapping geography — very likely a mislabeled day number requiring resequencing, not a genuine same-day double narrative.",
+      "recommendation": "RESOLVED", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION",
+      "resolution": "RESOLVED by human editorial decision (see facebook-import-manifest.md revision history). Original Day numbers are not authoritative; the canonical sequence is built from narrative chronology instead. idx51 becomes canonical Day 13 (Kluane Lake -> Alaska border) and idx53 becomes canonical Day 14 (Copper Center -> McCarthy Road), per the confirmed geographic sequence. See day-number-mapping.json for the full original-to-canonical translation table."
+    },
+    {
+      "id": "EF-05", "category": "repeated_didactic_framing", "days": [16, 17],
+      "excerpts": ["\"Patience catches more salmon than power ever will.\" (Day 16)", "\"The river hadn't changed. I had... It rewards patience.\" (Day 17)"],
+      "explanation": "The same 'fishing rewards patience over force' lesson is explained at near-full length on two consecutive days.",
+      "recommendation": "SHORTEN", "confidence": "MEDIUM", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF-06", "category": "recurring_framing_device", "days": [12, 15, 20, 21],
+      "excerpts": ["\"Some places measure time by clocks. Alaska measures it by light.\" (Day 15)"],
+      "explanation": "The midnight-sun/disoriented-time observation is explained in full on Day 12, then re-explained as a reflective aside on Day 15, and resurfaces as stated observation through Days 20-21.",
+      "recommendation": "REVIEW", "confidence": "LOW", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF-07", "category": "recurring_narrative_beat", "days": [11, 12, 16],
+      "excerpts": ["\"The vacation quietly ended.\" (Day 11)", "\"The expedition stopped feeling like a vacation. It started feeling like a life.\" (Day 16)"],
+      "explanation": "The 'this trip stopped being a vacation and became something more' turning point is declared three separate times at three different milestones, each re-derived from scratch.",
+      "recommendation": "REVIEW", "confidence": "MEDIUM", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF-08", "category": "internal_repetition", "days": [12],
+      "excerpts": ["Chapters Four, Six, and Nine of the (14-chapter) Day 12 entry each independently describe the same stretch of highway in similar impressionistic language."],
+      "explanation": "An unusually long single-day entry circles back to the same visual inventory multiple times under different chapter headings — a pacing/density issue more than a factual re-explanation.",
+      "recommendation": "REVIEW", "confidence": "LOW", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF-09", "category": "possible_missing_name", "days": [1, 21],
+      "excerpts": ["The van is called 'the Sprinter' / 'the van' throughout Days 1-21 — never 'Dory' in that range."],
+      "explanation": "Confirms the vehicle's proper name is not established until Day 22 (see EF2-07) — informational, not a redundancy problem.",
+      "recommendation": "REVIEW", "confidence": "HIGH", "classification": "SAFE_NORMALIZATION"
+    },
+    {
+      "id": "EF-10", "category": "duplicate_supplemental_posts", "days": [13, 14],
+      "excerpts": ["Two same-day supplemental posts appear verbatim under both Day 13 and Day 14 in the structural grouping."],
+      "explanation": "A data-grouping artifact from the date-co-occurrence heuristic (both days share a calendar posting date) rather than a prose-repetition problem; would create duplicate paragraphs if imported as-is.",
+      "recommendation": "REVIEW", "confidence": "MEDIUM", "classification": "SAFE_NORMALIZATION"
+    },
+    {
+      "id": "EF2-01", "category": "off_topic_tangent", "days": [34, 35],
+      "excerpts": ["\"This is the last off topic Captain's log. I appreciate those of you that tolerate the ramblings.\" (Day 35, author's own editor's note)"],
+      "explanation": "Roughly three consecutive posts depart entirely from the expedition narrative into a business/monetization essay; the author's own in-text notes acknowledge it as a tangent — the single largest structural interruption in the archive.",
+      "recommendation": "REVIEW", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF2-02", "category": "recurring_framing_device", "days": [32, 34, 35],
+      "excerpts": ["\"I stopped asking, 'How much comfort can I buy?' And I started asking, 'How much time can I buy?'\" (Day 32)"],
+      "explanation": "The money=time thesis (already flagged twice in Days 1-21) is fully re-derived a third and fourth time in Days 32 and 34-35.",
+      "recommendation": "SHORTEN", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF2-03", "category": "cumulative_recap", "days": [32, 34],
+      "excerpts": ["\"Yellowstone. Glacier. Banff. Jasper. Kluane. Wrangell-St. Elias...\" (Day 32)", "\"Colorado. Yellowstone. Glacier. Banff. Jasper... Fairbanks. The Dalton.\" (Day 34)"],
+      "explanation": "A near-identical full-route place-name list reappears six days apart, the second time with no new framing device.",
+      "recommendation": "MERGE", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF2-04", "category": "recurring_narrative_beat", "days": [22, 23],
+      "excerpts": ["\"It is the extraordinary people we meet along the way who give those places their soul.\" (Day 22)", "\"The map almost never changes you. The people do.\" (Day 23)"],
+      "explanation": "Two consecutive daily entries both close on the identical 'people, not places' thesis; Day 23 restates it a second time within itself.",
+      "recommendation": "REVIEW", "confidence": "MEDIUM", "classification": "JUDGMENT_CALL"
+    },
+    {
+      "id": "EF2-05", "category": "recurring_framing_device", "days": [38, 39],
+      "excerpts": ["\"The doldrums are different. They arrive quietly...\" (Day 38)", "\"The doldrums are patient. They never announce themselves...\" (Day 39)"],
+      "explanation": "The 'doldrums' metaphor is introduced and fully explained from scratch in the opening chapter of two consecutive entries.",
+      "recommendation": "MERGE", "confidence": "HIGH", "classification": "EDITORIAL_RECOMMENDATION"
+    },
+    {
+      "id": "EF2-06", "category": "duplicate_chapter_title", "days": [28, 32],
+      "excerpts": ["\"...we slept in safe harbor.\" (Day 28, chapter titled 'Riding Out the Storm')", "\"we eased our land yacht into one more safe harbor.\" (Day 32, chapter titled 'Safe Harbor')"],
+      "explanation": "Two different chapters reuse the identical phrase/title 'Safe Harbor' for structurally similar beats — a title collision risk in a compiled book with a table of contents.",
+      "recommendation": "REVIEW", "confidence": "MEDIUM", "classification": "SAFE_NORMALIZATION"
+    },
+    {
+      "id": "EF2-07", "category": "unexplained_naming_gap", "days": [22],
+      "excerpts": ["\"By the time coffee was poured and Dory was ready to roll...\" (Day 22, first use — no naming/origin story given)"],
+      "explanation": "The vehicle is suddenly called 'Dory' starting Day 22 with zero introduction after being called only 'the Sprinter'/'the van' through Day 21 — a continuity gap for book editing, not a redundancy problem.",
+      "recommendation": "REVIEW", "confidence": "HIGH", "classification": "SAFE_NORMALIZATION"
+    },
+    {
+      "id": "EF2-08", "category": "unresolved_narrative_promise", "days": [32, 33],
+      "excerpts": ["\"Put your guess in the comments. Tomorrow... I'll open the books.\" (Day 32, closing)"],
+      "explanation": "Day 32 promises a cost-breakdown reveal 'tomorrow'; Day 33 never addresses it, and the figure only surfaces in passing three entries later inside an unrelated essay.",
+      "recommendation": "REVIEW", "confidence": "LOW", "classification": "JUDGMENT_CALL"
+    }
+  ]
+}

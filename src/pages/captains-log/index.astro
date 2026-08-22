@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { listPublicEntries } from "../../lib/content.js";
+
+export const prerender = false;
+
+const entries = listPublicEntries("captains-log");
+
+Astro.response.headers.set("cache-control", "public, max-age=60, s-maxage=300, stale-while-revalidate=86400");
+---
+
+<BaseLayout
+  title="Captain's Log"
+  description="Ad Libitum Vita's Captain's Log — the expedition narrative, day by day, wherever &quot;day&quot; turns out to mean."
+  container="wide"
+>
+  <p class="eyebrow">Ad Libitum Vita</p>
+  <h1>Captain's Log</h1>
+  <p class="kicker" style="max-width: 34rem;">
+    The expedition narrative — day by day, wherever "day" turns out to mean. Public previews
+    below; the complete entries, with photos, live in the Library.
+  </p>
+
+  {entries.length === 0 ? (
+    <p class="empty-note">No entries published yet. Check back soon.</p>
+  ) : (
+    <ul class="entry-list">
+      {entries.map((entry) => (
+        <li>
+          <a class="card entry-card" href={`/captains-log/${entry.slug}`}>
+            <p class="entry-meta">
+              {entry.day_number != null && <span>Day {entry.day_number}</span>}
+              {entry.expedition_date && <span>{entry.expedition_date}</span>}
+              {entry.location && <span>{entry.location}</span>}
+            </p>
+            <h2>{entry.title}</h2>
+            {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="library-cta card">
+    <div>
+      <p class="eyebrow">Family &amp; friends</p>
+      <h2>Read the complete log</h2>
+      <p>Every entry in full, with photographs, lives in the member Library.</p>
+    </div>
+    <a class="btn coral" href="/login">Member Login</a>
+  </div>
+
+  <style>
+    .empty-note {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .entry-list { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1rem; }
+    .entry-card { padding: 1.5rem 1.75rem; }
+    .entry-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--alv-turquoise-deep);
+      margin-bottom: 0.5rem;
+    }
+    .entry-card h2 { margin: 0 0 0.4rem; }
+    .library-cta { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
+    .library-cta p { margin-bottom: 0; }
+  </style>
+</BaseLayout>

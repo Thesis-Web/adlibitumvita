@@ -78,7 +78,7 @@ const beyondTheMap = listPublicTeasers("beyond-the-map", 3);
         <h2>The expedition narrative</h2>
         <p class="kicker">Day by day, wherever "day" turns out to mean.</p>
       </div>
-      <a class="btn secondary" href="/library/captains-log">Read the Log</a>
+      <a class="btn secondary" href="/captains-log">Read the Log</a>
     </div>
 
     {captainsLog.length === 0 ? (
@@ -89,7 +89,7 @@ const beyondTheMap = listPublicTeasers("beyond-the-map", 3);
     ) : (
       <div class="teaser-grid">
         {captainsLog.map((entry) => (
-          <a class="card teaser-card" href={`/library/captains-log/${entry.slug}`}>
+          <a class="card teaser-card" href={`/captains-log/${entry.slug}`}>
             <span class="badge public">Captain's Log</span>
             <h3>{entry.title}</h3>
             {entry.excerpt && <p class="muted">{entry.excerpt}</p>}

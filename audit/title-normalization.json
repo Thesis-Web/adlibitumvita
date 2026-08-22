@@ -1,0 +1,392 @@
+{
+  "status": "REVISION 2 — retitled using canonical Day numbers per human editorial review; see facebook-import-manifest.md for the Day-13 split rationale.",
+  "title_proposals": [
+    {
+      "canonical_day_number": 1,
+      "original_day_label": "1",
+      "original": "Captain's Log 6-20-26 / Day 1. Is this really happening?",
+      "proposed_canonical_title": "Captain's Log — Day 1: Is This Really Happening?",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Date demoted to metadata (expedition_date); subtitle promoted into title.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 2,
+      "original_day_label": "2",
+      "original": "Captain's Log 6-21-26 / Day 2: The Kindness of Strangers",
+      "proposed_canonical_title": "Captain's Log — Day 2: The Kindness of Strangers",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Date demoted to metadata.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 3,
+      "original_day_label": "3",
+      "original": "Captain's Log 6-22-26 / Day 3 – The Day Everything Changed",
+      "proposed_canonical_title": "Captain's Log — Day 3: The Day Everything Changed",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Date demoted; en-dash standardized to colon.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 4,
+      "original_day_label": "4",
+      "original": "Captain's Log 6-23-26 / Day 4 – Sometimes the Best Campsite Is a Workshop",
+      "proposed_canonical_title": "Captain's Log — Day 4: Sometimes the Best Campsite Is a Workshop",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Date demoted.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 5,
+      "original_day_label": "5",
+      "original": "\"Captain's Log 6-24-26 / Day5: Gold Ridge, Cold River, Easy Sleep...",
+      "proposed_canonical_title": "Captain's Log — Day 5: Gold Ridge, Cold River, Easy Sleep",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Date demoted; stray unmatched opening quote and missing space in 'Day5' fixed; trailing ellipsis dropped.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 6,
+      "original_day_label": "6",
+      "original": "Captain's Log 6-25-26 / Day 6 – The Day the Road and Sky Became Our Water! Different Water. Same Rhythm",
+      "proposed_canonical_title": "Captain's Log — Day 6: The Day the Road and Sky Became Our Water",
+      "classification": "JUDGMENT_CALL",
+      "note": "Two subtitle fragments present ('...Became Our Water!' and 'Different Water. Same Rhythm'). Proposal keeps the first as title, second as tagline/subtitle field — author should confirm.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 7,
+      "original_day_label": "7",
+      "original": "Captain's Log- 6-26-26 / \"Bears, Border, Battery, Oh My!\" -Mountains on Overtime- / Day 7",
+      "proposed_canonical_title": "Captain's Log — Day 7: Bears, Border, Battery, Oh My!",
+      "classification": "JUDGMENT_CALL",
+      "note": "Two competing subtitle candidates (quoted title vs. tagline 'Mountains on Overtime'); quoted title chosen as primary, tagline proposed for the subtitle field.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 8,
+      "original_day_label": "8",
+      "original": "Captain's Log – 6-27-26 / \"Echoes Across the Mountains\" When Every Park Feels Like Home / Day 8",
+      "proposed_canonical_title": "Captain's Log — Day 8: Echoes Across the Mountains",
+      "classification": "JUDGMENT_CALL",
+      "note": "Same two-subtitle pattern as Day 7; tagline 'When Every Park Feels Like Home' proposed for subtitle field.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 9,
+      "original_day_label": "9",
+      "original": "Captain's Log — Day 9",
+      "proposed_canonical_title": "Captain's Log — Day 9",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical; no subtitle stated in text.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 10,
+      "original_day_label": "10",
+      "original": "Captain's Log — Day 10",
+      "proposed_canonical_title": "Captain's Log — Day 10",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 11,
+      "original_day_label": "11",
+      "original": "Day 11 — The Last Harbor",
+      "proposed_canonical_title": "Captain's Log — Day 11: The Last Harbor",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Reordered to lead with 'Captain's Log' for series consistency; only entry where Day precedes the series name.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 12,
+      "original_day_label": "12",
+      "original": "Captain's Log — Day 12",
+      "proposed_canonical_title": "Captain's Log — Day 12",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 13,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)",
+      "original": "Day 13 — The Final Test Before Alaska",
+      "proposed_canonical_title": "Captain's Log — Day 13: The Final Test Before Alaska",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Human editorial review resolved the original Day-13 conflict by splitting it into two canonical days (see manifest). This entry (Kluane Lake -> Alaska border) becomes canonical Day 13; its existing subtitle is used as-is, only the series prefix/dash style is normalized.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 14,
+      "original_day_label": "13 (mislabeled; author confirms Day-13 numbering was a bookkeeping error)",
+      "original": "Captain’s Log — Day 13 / The Road to McCarthy",
+      "proposed_canonical_title": "Captain's Log — Day 14: The Road to McCarthy",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Human editorial review resolved the original Day-13 conflict by splitting it into two canonical days (see manifest). This entry (Copper Center -> McCarthy Road) becomes canonical Day 14; its existing subtitle 'The Road to McCarthy' is used as-is, only the Day number and dash style are normalized.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 15,
+      "original_day_label": "14",
+      "original": "Captain's Log - Day 14",
+      "proposed_canonical_title": "Captain's Log — Day 15",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Hyphen standardized to em-dash.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 16,
+      "original_day_label": "15",
+      "original": "Captain's Log- Day 15",
+      "proposed_canonical_title": "Captain's Log — Day 16",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing space before dash fixed; hyphen standardized to em-dash.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 17,
+      "original_day_label": "16",
+      "original": "Day 16 — Captain's Log",
+      "proposed_canonical_title": "Captain's Log — Day 17",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Reordered; note this entry's edit-history snapshot said 'Day 15' — author renumbered to 16 during editing, current text is authoritative.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 18,
+      "original_day_label": "17",
+      "original": "Captain's Log — Day 17",
+      "proposed_canonical_title": "Captain's Log — Day 18",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 19,
+      "original_day_label": "18",
+      "original": "Captain's Log – Day 18: Where the River Felt Like Home",
+      "proposed_canonical_title": "Captain's Log — Day 19: Where the River Felt Like Home",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "En-dash after 'Log' standardized to em-dash; colon subtitle already well-formed.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 20,
+      "original_day_label": "19",
+      "original": "Captain's Log — Day 19",
+      "proposed_canonical_title": "Captain's Log — Day 20",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 21,
+      "original_day_label": "20",
+      "original": "Captain's Log — Day 20",
+      "proposed_canonical_title": "Captain's Log — Day 21",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical (curly apostrophe normalized).",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 22,
+      "original_day_label": "21",
+      "original": "Captain's Log — Day 21",
+      "proposed_canonical_title": "Captain's Log — Day 22",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 23,
+      "original_day_label": "22",
+      "original": "Captain's Log — Day 22",
+      "proposed_canonical_title": "Captain's Log — Day 23",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 24,
+      "original_day_label": "23",
+      "original": "Captain's Log – Day 23",
+      "proposed_canonical_title": "Captain's Log — Day 24",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "En-dash standardized to em-dash.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 25,
+      "original_day_label": "24",
+      "original": "Captain's Log — Day 24",
+      "proposed_canonical_title": "Captain's Log — Day 25",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 26,
+      "original_day_label": "25",
+      "original": "Captain's Log — Day 25",
+      "proposed_canonical_title": "Captain's Log — Day 26",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical (curly apostrophe normalized).",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 27,
+      "original_day_label": "26",
+      "original": "Captain's Log — Day 26 [+ continuation part]",
+      "proposed_canonical_title": "Captain's Log — Day 27: The Last Cast",
+      "classification": "EDITORIAL_RECOMMENDATION",
+      "note": "Requires merging the two Facebook-length-limit parts first (see manifest). 'The Last Cast' subtitle taken from the body's first chapter heading area — confirm with author.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 28,
+      "original_day_label": "27",
+      "original": "Captain's Log - Day 27 - The River That Looked Back",
+      "proposed_canonical_title": "Captain's Log — Day 28: The River That Looked Back",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Hyphens standardized to em-dash/colon.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 29,
+      "original_day_label": "28",
+      "original": "Captain's Log Day 28 - An Ad Libitum Day",
+      "proposed_canonical_title": "Captain's Log — Day 29: An Ad Libitum Day",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing em-dash after 'Log' added; trailing hyphen standardized to colon.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 30,
+      "original_day_label": "29",
+      "original": "Captain's Log – Day 29",
+      "proposed_canonical_title": "Captain's Log — Day 30",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "En-dash standardized.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 31,
+      "original_day_label": "30",
+      "original": "Captain's Log — Day 30 Freedom to Wander",
+      "proposed_canonical_title": "Captain's Log — Day 31: Freedom to Wander",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing colon before subtitle added.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 32,
+      "original_day_label": "31",
+      "original": "Captain's Log — Day 31 At the Edge of the Map",
+      "proposed_canonical_title": "Captain's Log — Day 32: At the Edge of the Map",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing colon before subtitle added.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 33,
+      "original_day_label": "32",
+      "original": "Captain's Log – Day 32",
+      "proposed_canonical_title": "Captain's Log — Day 33",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "En-dash standardized.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 34,
+      "original_day_label": "33",
+      "original": "Captain's Log — Day 33 The Long Road Home",
+      "proposed_canonical_title": "Captain's Log — Day 34: The Long Road Home",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing colon before subtitle added.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 35,
+      "original_day_label": "34",
+      "original": "Captains Log Day 34 [+ continuation part]",
+      "proposed_canonical_title": "Captain's Log — Day 35: Kansas, Apparently",
+      "classification": "EDITORIAL_RECOMMENDATION",
+      "note": "Missing apostrophe fixed; requires merging the two continuation parts first (see manifest). Subtitle taken from the body's first chapter heading — confirm with author.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 36,
+      "original_day_label": "35",
+      "original": "Captains Log Day 35 [+ companion part]",
+      "proposed_canonical_title": "Captain's Log — Day 36: You Can Sleep When You Die",
+      "classification": "EDITORIAL_RECOMMENDATION",
+      "note": "Missing apostrophes fixed; requires merging two same-day parts first (see manifest); the business/Patreon-appeal opening section is a JUDGMENT_CALL on whether it belongs in the canonical book text at all (see continuity findings).",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 37,
+      "original_day_label": "36",
+      "original": "Captain's Log — Day 36 ",
+      "proposed_canonical_title": "Captain's Log — Day 37",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Trailing whitespace trimmed.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 38,
+      "original_day_label": "37",
+      "original": "Captain's Log — Day 37",
+      "proposed_canonical_title": "Captain's Log — Day 38",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Already canonical.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 39,
+      "original_day_label": "38",
+      "original": "[preamble] ... Captain's Log – Day 38",
+      "proposed_canonical_title": "Captain's Log — Day 39: The Doldrums",
+      "classification": "EDITORIAL_RECOMMENDATION",
+      "note": "Entry currently opens with an apology/scheduling preamble ('I had no Internet... today it's a two-fer') before the real title. Recommend moving preamble to an editorial footnote/metadata field, not the title/opening of the chapter. Subtitle taken from 'Chapter One – The Doldrums'.",
+      "confidence": "MEDIUM"
+    },
+    {
+      "canonical_day_number": 40,
+      "original_day_label": "39",
+      "original": "Captain's Log - Day 39- Breaking The Mold",
+      "proposed_canonical_title": "Captain's Log — Day 40: Breaking the Mold",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Hyphens standardized; title-case normalized ('The' -> 'the').",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 41,
+      "original_day_label": "40",
+      "original": "Captain's Log Day 40: Mesa Verde ",
+      "proposed_canonical_title": "Captain's Log — Day 41: Mesa Verde",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing em-dash after 'Log' added; trailing whitespace trimmed.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 42,
+      "original_day_label": "41",
+      "original": "Captain's Log Day 41 — Moab, Utah",
+      "proposed_canonical_title": "Captain's Log — Day 42: Moab, Utah",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing em-dash after 'Log' added; trailing em-dash before subtitle standardized to colon.",
+      "confidence": "HIGH"
+    },
+    {
+      "canonical_day_number": 43,
+      "original_day_label": "42",
+      "original": "Captain's Log Day 42 — Borrowed Time",
+      "proposed_canonical_title": "Captain's Log — Day 43: Borrowed Time",
+      "classification": "SAFE_NORMALIZATION",
+      "note": "Missing em-dash after 'Log' added; trailing em-dash before subtitle standardized to colon.",
+      "confidence": "HIGH"
+    }
+  ]
+}

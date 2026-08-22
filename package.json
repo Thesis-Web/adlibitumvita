@@ -20,7 +20,8 @@
     "db:backup": "tsx scripts/db-backup.ts",
     "admin:create": "tsx scripts/admin-create.ts",
     "import:markdown": "tsx scripts/import-markdown.ts",
-    "import:facebook": "tsx scripts/import-facebook.ts"
+    "import:facebook": "tsx scripts/import-facebook.ts",
+    "import:captains-log:canonical": "tsx scripts/import-captains-log-canonical.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.4",

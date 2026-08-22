@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublicEntryDetail, getPublicNeighbors } from "../../lib/content.js";
+import { renderMarkdown } from "../../lib/markdown.js";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const entry = slug ? getPublicEntryDetail("captains-log", slug) : undefined;
+
+if (!entry) {
+  Astro.response.status = 404;
+} else {
+  Astro.response.headers.set("cache-control", "public, max-age=60, s-maxage=300, stale-while-revalidate=86400");
+}
+
+const previewHtml = entry ? renderMarkdown(entry.public_preview_markdown ?? "") : "";
+const tags = entry ? (JSON.parse(entry.tags_json) as string[]) : [];
+const neighbors = entry ? getPublicNeighbors("captains-log", entry.day_number) : { previous: null, next: null };
+const canonicalUrl = entry ? new URL(`/captains-log/${entry.slug}`, Astro.site).toString() : "";
+
+const jsonLd = entry
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: entry.title,
+      description: entry.meta_description ?? entry.excerpt ?? undefined,
+      url: canonicalUrl,
+      mainEntityOfPage: canonicalUrl,
+      datePublished: entry.published_at ?? undefined,
+      dateModified: entry.updated_at,
+      author: { "@type": "Organization", name: "Ad Libitum Vita" },
+      publisher: { "@type": "Organization", name: "Ad Libitum Vita" },
+      ...(entry.location ? { contentLocation: entry.location } : {}),
+    }
+  : null;
+---
+
+<BaseLayout
+  title={entry?.seo_title ?? entry?.title ?? "Not found"}
+  description={entry?.meta_description ?? entry?.excerpt ?? undefined}
+  noindex={entry ? entry.indexable !== 1 : true}
+  container="normal"
+>
+  {jsonLd && (
+    <Fragment slot="head">
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    </Fragment>
+  )}
+
+  {!entry ? (
+    <div class="not-found">
+      <p class="eyebrow">Captain's Log</p>
+      <h1>That entry couldn't be found.</h1>
+      <a class="btn secondary" href="/captains-log">← Back to Captain's Log</a>
+    </div>
+  ) : (
+    <article class="entry-article">
+      <p class="back-link"><a href="/captains-log">← Captain's Log</a></p>
+
+      <header class="entry-header">
+        <p class="entry-meta">
+          {entry.day_number != null && <span>Day {entry.day_number}</span>}
+          {entry.expedition_date && <span>{entry.expedition_date}</span>}
+          {entry.location && <span>{entry.location}</span>}
+        </p>
+        <h1>{entry.title}</h1>
+        {entry.subtitle && <p class="entry-subtitle">{entry.subtitle}</p>}
+      </header>
+
+      <div class="entry-body" set:html={previewHtml} />
+
+      <div class="continue-cta card">
+        <div>
+          <p class="eyebrow">Continue reading</p>
+          <h2>The complete entry, with photos, is in the Library</h2>
+          <p class="muted">Family members and friends get individual accounts — there's no public sign-up.</p>
+        </div>
+        <a class="btn coral" href="/login">Member Login</a>
+      </div>
+
+      {tags.length > 0 && (
+        <p class="entry-tags">{tags.map((t) => <span class="badge draft">{t}</span>)}</p>
+      )}
+
+      <nav class="entry-nav" aria-label="Captain's Log navigation">
+        <a class={`nav-link ${!neighbors.previous ? "disabled" : ""}`} href={neighbors.previous ? `/captains-log/${neighbors.previous.slug}` : undefined}>
+          {neighbors.previous ? <>← {neighbors.previous.title}</> : <>← Start of the log</>}
+        </a>
+        <a class={`nav-link nav-link-next ${!neighbors.next ? "disabled" : ""}`} href={neighbors.next ? `/captains-log/${neighbors.next.slug}` : undefined}>
+          {neighbors.next ? <>{neighbors.next.title} →</> : <>Latest entry</>}
+        </a>
+      </nav>
+    </article>
+  )}
+
+  <style>
+    .not-found { text-align: center; padding: 4rem 0; }
+    .back-link { margin-bottom: 1.5rem; }
+    .entry-header { margin-bottom: 1.75rem; }
+    .entry-meta {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--alv-turquoise-deep); margin-bottom: 0.6rem;
+    }
+    .entry-subtitle { font-family: var(--serif); font-size: 1.2rem; color: var(--muted); margin-top: -0.2rem; }
+
+    .entry-body { font-size: 1.08rem; line-height: 1.75; }
+    .entry-body :global(h2) { margin-top: 2.2rem; }
+    .entry-body :global(h3) { margin-top: 1.8rem; }
+    .entry-body :global(p) { margin-bottom: 1.25rem; }
+    .entry-body :global(blockquote) {
+      margin: 1.75rem 0;
+      padding: 0.25rem 0 0.25rem 1.25rem;
+      border-left: 3px solid var(--alv-coral);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+    .entry-body :global(a) { text-decoration: underline; }
+
+    .continue-cta {
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+      margin: 2.5rem 0;
+    }
+    .continue-cta p { margin-bottom: 0; }
+    .continue-cta h2 { font-size: 1.15rem; }
+
+    .entry-tags { margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .entry-nav {
+      display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem;
+      padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .nav-link { flex: 1; text-decoration: none; font-weight: 600; }
+    .nav-link-next { text-align: right; }
+    .nav-link.disabled { color: var(--muted); pointer-events: none; font-weight: 400; }
+  </style>
+</BaseLayout>

@@ -1,0 +1,141 @@
+{
+  "methodology": "Built from two chronological close-reading passes (Days 1-21, then Days 22-42) over the full Captain's Log text. The second pass was given the first pass's registry so it could detect entities/concepts carried forward and flag cross-batch repetition. Excerpts are kept short (one sentence) per the audit's public-safety constraint.",
+  "entity_count": 17,
+  "entities": [
+    {
+      "canonical_name": "Dory (expedition van)",
+      "type": "vehicle",
+      "first_named_day": 22,
+      "first_introduced_day": 1,
+      "facts_established": "2008 Dodge Sprinter 3500 dually, bought about a year before departure; self-built camper conversion finished in a rushed 34-day sprint before departure. Called 'the Sprinter' / 'the van' throughout Days 1-21 with NO proper name used anywhere in that range (verified by full-text search). Starting Day 22 it is suddenly called 'Dory' with zero naming/origin story — the text treats the name as already familiar to the reader.",
+      "continuity_flag": "Naming gap: a reader moving sequentially from Day 21 to Day 22 encounters an unexplained new proper name for the same vehicle. See finding EF2-07.",
+      "notable_occurrences": [
+        { "day": 9, "judgment": "NEW_INFO", "note": "First states the van-as-sailboat analogy (compared to the family's Vancouver 25 sailboat) that recurs for the rest of the archive." },
+        { "day": 20, "judgment": "NEW_INFO", "note": "First time exact power-system specs (solar/battery) are given." },
+        { "day": 22, "judgment": "NEW_INFO", "note": "First on-page use of the name 'Dory', alternated with 'the Sprinter' in consecutive sentences of the same entry, confirming same referent." }
+      ]
+    },
+    {
+      "canonical_name": "James (narrator / father)",
+      "type": "person",
+      "first_introduced_day": 1,
+      "facts_established": "Unnamed narrator through Day 5; named Day 6. 48 years old (Day 17), youngest of four brothers (Day 25), longtime sailor/boat owner, hunting/fishing guide by trade, worked at Discount Tire in Webster TX (Day 29), built and later scaled back an HVAC/construction business with ~32 employees (Day 34), 'fired himself' from field work the prior August due to physical decline (Day 34).",
+      "notable_occurrences": [
+        { "day": 6, "judgment": "NEW_INFO", "note": "First named in text." },
+        { "day": 25, "judgment": "NEW_INFO", "note": "New East Texas duck-guiding backstory and 'youngest of four brothers' detail." },
+        { "day": 34, "judgment": "NEW_INFO", "note": "Major new business-history backstory forming the basis of the Days 34-35 monetization essay (EF2-01)." }
+      ]
+    },
+    {
+      "canonical_name": "Amber (wife / mother)",
+      "type": "person",
+      "first_introduced_day": 1,
+      "facts_established": "Named Day 2. Runs the van's cooking, does trip admin/photo-organizing, becomes an active angler, lands her first salmon Day 25. Stayed home with the (implied older) children and homeschooled them before this expedition (revealed Day 34).",
+      "notable_occurrences": [
+        { "day": 2, "judgment": "NEW_INFO", "note": "First named, alongside Jude." },
+        { "day": 25, "judgment": "NEW_INFO", "note": "Narrative payoff of landing her first salmon." }
+      ]
+    },
+    {
+      "canonical_name": "Jude (son)",
+      "type": "person",
+      "first_introduced_day": 1,
+      "facts_established": "The reason for the trip ('wanted to fly fish in Alaska'). Named Day 2, ~14 years old (Day 13), homeschooled on the road, lands his first Alaska sockeye (Day 18) and first wild river rainbow trout (Day 25). Revealed Day 34 to have three older adult siblings not on this trip (one graduated Texas A&M) — recontextualizes the 'our son' framing used through most of the archive as if he were an only child.",
+      "notable_occurrences": [
+        { "day": 34, "judgment": "NEW_INFO", "note": "First reveal anywhere in the archive of older siblings; a continuity/framing point for editors, not a repetition problem." }
+      ]
+    },
+    {
+      "canonical_name": "\"Ad Libitum Vita\" / \"Live Life Unscripted\"",
+      "type": "concept",
+      "first_introduced_day": 1,
+      "facts_established": "Used mainly as a hashtag/sign-off through most of the archive; the philosophy is illustrated through action (e.g. the Day 4 Gibbon Falls spontaneous stop) more than defined in prose. Day 21 bookends the Day 4 illustration with a similar 'best destinations are the ones you never planned' conclusion — read as an intentional bookend, not a flagged redundancy.",
+      "notable_occurrences": [
+        { "day": 4, "judgment": "NEW_INFO", "note": "First real narrative illustration of 'unscripted' (an unplanned stop) rather than just a hashtag." }
+      ]
+    },
+    {
+      "canonical_name": "\"We measure money in time, not dollars\" (family philosophy)",
+      "type": "concept",
+      "first_introduced_day": 10,
+      "facts_established": "Core thesis: money spent should be measured in days/time of travel given up, not dollar amounts. Fully argued at chapter length FOUR times across the archive (Day 10 primary, Day 10 aside, Day 15, Day 32) and forms the philosophical spine of the Days 34-35 essay — the most-repeated concept found in this audit.",
+      "continuity_flag": "See findings EF-01, EF-02, EF2-02 — recommend keeping the Day 10 primary treatment as definitive and reducing later instances to callbacks.",
+      "notable_occurrences": [
+        { "day": 10, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Same-day aside restates the primary entry's argument almost verbatim." },
+        { "day": 15, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Full two-chapter restatement of the Day 10 thesis." },
+        { "day": 32, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Third full re-derivation." },
+        { "day": 34, "judgment": "DEVELOPMENT", "note": "Extends the thesis into new territory (monetizing the Log itself) but keeps re-stating the base premise." }
+      ]
+    },
+    {
+      "canonical_name": "Sailing / nautical metaphor for the expedition",
+      "type": "concept",
+      "first_introduced_day": 4,
+      "facts_established": "The family are experienced sailors (own a Vancouver 25 sailboat) and frame the road trip throughout in nautical language: van as 'vessel'/'ship'/'land yacht', campsites as 'harbors', mechanical problems as 'boat jobs'. Well-sustained across all 42 days with mostly earned, non-redundant use, EXCEPT the 'doldrums' sub-motif (Days 38-39, see below) and one exact chapter-title reuse ('Safe Harbor', Days 28 and 32).",
+      "notable_occurrences": [
+        { "day": 9, "judgment": "NEW_INFO", "note": "Grounds the metaphor in the family's real, named boat." },
+        { "day": 12, "judgment": "DEVELOPMENT", "note": "Most extended, self-conscious use of the device (a full chapter)." },
+        { "day": 38, "judgment": "NEW_INFO", "note": "Introduces the 'doldrums' sub-motif in full." },
+        { "day": 39, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Re-explains 'doldrums' from scratch one entry later; see EF2-05." }
+      ]
+    },
+    {
+      "canonical_name": "\"This stopped being a vacation and became an expedition\" (narrative turning point)",
+      "type": "concept",
+      "first_introduced_day": 11,
+      "facts_established": "The specific beat of framing the trip as having crossed from tourism into committed expedition, declared three times (Days 11, 12, 16) at three different real milestones.",
+      "continuity_flag": "See finding EF-07 — could read as intentional escalating refrain if each instance explicitly referenced the prior one; as written, each re-derives the realization from scratch.",
+      "notable_occurrences": [
+        { "day": 11, "judgment": "NEW_INFO", "note": "First statement, tied to crossing north of Jasper." },
+        { "day": 12, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Restated one day later in similar phrasing." }
+      ]
+    },
+    {
+      "canonical_name": "Jasper wildfire disaster and rebuilding",
+      "type": "place/event",
+      "first_introduced_day": 10,
+      "facts_established": "A merged firestorm struck Jasper, AB roughly two years before the trip; town evacuated, extensive property loss. Day 11's on-foot walkthrough adds substantial new, non-repeated detail (melted house numbers, shipping-container businesses) — a legitimate continuation of the Day 10 highway narration, not a redundant re-explanation.",
+      "notable_occurrences": [
+        { "day": 11, "judgment": "NEW_INFO", "note": "Detailed, non-repeated continuation of the Day 10 mention." }
+      ]
+    },
+    {
+      "canonical_name": "\"It's about the people, not the places\" (thesis)",
+      "type": "concept",
+      "first_introduced_day": 22,
+      "facts_established": "The conclusion that the memorable part of the expedition is the people met, not the scenery — stated as the explicit closing thesis of Day 22, restated almost point-for-point closing Day 23, and restated a second time within Day 23 itself.",
+      "continuity_flag": "See finding EF2-04.",
+      "notable_occurrences": [
+        { "day": 22, "judgment": "NEW_INFO", "note": "First statement." },
+        { "day": 23, "judgment": "REDUNDANT_REINTRODUCTION", "note": "Restated cross-day and again intra-day." }
+      ]
+    },
+    {
+      "canonical_name": "Melancholy / psychological toll of the expedition",
+      "type": "concept",
+      "first_introduced_day": 30,
+      "facts_established": "A multi-page original reflection on 'melancholy' as a natural long-expedition phase, tied to the Denali disappointment narrative. Later echoed (not re-explained) by the distinct 'doldrums' nautical framing in Days 38-39 — a genuinely different angle, not a repeat.",
+      "notable_occurrences": [
+        { "day": 30, "judgment": "NEW_INFO", "note": "Full original treatment." }
+      ]
+    },
+    {
+      "canonical_name": "Monetization / Patreon business-model essay",
+      "type": "concept",
+      "first_introduced_day": 34,
+      "facts_established": "A self-contained essay spanning Day 34 (both parts) and part of Day 35, in which James works through charging for the Captain's Log, his business history, and a proposed Patreon model. The author's own in-text editor's notes call it 'off topic' and 'ramblings'.",
+      "continuity_flag": "Largest structural interruption in the archive — see finding EF2-01.",
+      "notable_occurrences": [
+        { "day": 34, "judgment": "NEW_INFO", "note": "Thesis question opening the essay." }
+      ]
+    },
+    {
+      "canonical_name": "Day 13 day-numbering conflict",
+      "type": "continuity_flag",
+      "first_introduced_day": 13,
+      "facts_established": "Two posts both self-label 'Day 13' but describe sequential, non-overlapping geography (Kluane Lake departure, then McCarthy Road already inside Alaska) — very likely a mislabeled day number requiring resequencing before this range is treated as canonical chapter order.",
+      "continuity_flag": "RESOLVED by human editorial decision: original Day-number labels are not authoritative. idx51 (Kluane Lake -> Alaska border) is now canonical Day 13; idx53 (Copper Center -> McCarthy Road) is now canonical Day 14. See facebook-import-manifest.md and day-number-mapping.json.",
+      "notable_occurrences": []
+    }
+  ]
+}

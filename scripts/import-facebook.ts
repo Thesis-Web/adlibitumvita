@@ -4,6 +4,13 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { getDb } from "../src/db/client.js";
 import { createContentEntry, type Collection } from "../src/lib/content.js";
+import {
+  extractDayNumber,
+  extractMedia,
+  extractPostText,
+  fixMojibake,
+  looksLikeMetaPostsFile,
+} from "../src/lib/facebook-import.js";
 
 const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".heic", ".gif"]);
 const VIDEO_EXT = new Set([".mp4", ".mov"]);
@@ -43,19 +50,6 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-/** Known shape of Meta's "posts/your_posts_1.json" export: an array of post objects. */
-interface MetaPostCandidate {
-  timestamp?: number;
-  data?: { post?: string }[];
-  attachments?: { data?: { media?: { uri?: string } }[] }[];
-}
-
-function looksLikeMetaPostsFile(parsed: unknown): parsed is MetaPostCandidate[] {
-  if (!Array.isArray(parsed) || parsed.length === 0) return false;
-  const first = parsed[0] as Record<string, unknown>;
-  return "timestamp" in first || "data" in first || "attachments" in first;
-}
-
 function runDiscovery(source: string): void {
   const files = walk(source);
   const jsonFiles = files.filter((f) => extname(f) === ".json");
@@ -63,6 +57,11 @@ function runDiscovery(source: string): void {
   const videos = files.filter((f) => VIDEO_EXT.has(extname(f).toLowerCase()));
 
   const candidates: { path: string; keys: string[]; looksLikePosts: boolean; itemCount?: number }[] = [];
+  let postFileCount = 0;
+  let postsWithDayNumber = 0;
+  let postsWithMedia = 0;
+  const sampleTitles: string[] = [];
+
   for (const jf of jsonFiles.slice(0, 200)) {
     try {
       const parsed: unknown = JSON.parse(readFileSync(jf, "utf8"));
@@ -76,6 +75,18 @@ function runDiscovery(source: string): void {
         looksLikePosts,
         itemCount: Array.isArray(parsed) ? parsed.length : undefined,
       });
+
+      if (looksLikePosts) {
+        postFileCount += 1;
+        for (const post of parsed) {
+          if (extractDayNumber(post)) postsWithDayNumber += 1;
+          if (extractMedia(post).length > 0) postsWithMedia += 1;
+          const text = extractPostText(post);
+          if (sampleTitles.length < 10 && text) {
+            sampleTitles.push(fixMojibake(text.split("\n")[0] ?? text).slice(0, 80));
+          }
+        }
+      }
     } catch {
       candidates.push({ path: relative(source, jf), keys: [], looksLikePosts: false });
     }
@@ -88,15 +99,44 @@ function runDiscovery(source: string): void {
     imageCount: images.length,
     videoCount: videos.length,
     likelyPostFiles: candidates.filter((c) => c.looksLikePosts).map((c) => ({ path: c.path, itemCount: c.itemCount })),
+    postFileCount,
+    postsWithDayNumberMentioned: postsWithDayNumber,
+    postsWithMedia,
+    sampleDecodedFirstLines: sampleTitles,
     representativeJsonSamples: candidates.slice(0, 25),
     mediaDirectorySamples: [...new Set(images.slice(0, 25).map((f) => relative(source, f).split("/").slice(0, -1).join("/")))],
   };
 
   console.log(JSON.stringify(report, null, 2));
-  console.log("\nNo database changes made (--discover). Inspect likelyPostFiles above, then extend the");
-  console.log("commit-mode parser in scripts/import-facebook.ts once the real export schema is confirmed.");
+  console.log(
+    "\nNo database changes made (--discover). This reflects Meta's REAL export schema: 'title' is Meta's",
+  );
+  console.log(
+    "auto-generated activity caption (not the author's title), post text lives in data[].post (0..n items,",
+  );
+  console.log(
+    "mixed with update_timestamp/backdated_timestamp/empty items), and text may contain Latin-1-as-UTF-8",
+  );
+  console.log(
+    "mojibake (see src/lib/facebook-import.ts fixMojibake). Day numbers are usually stated in the post body,",
+  );
+  console.log(
+    "not the Facebook title. Do NOT run --commit against a real Captain's Log export until a canonical",
+  );
+  console.log("manifest (see audit/) has been reviewed — day grouping, splits, and conflicts are not naive 1:1.");
 }
 
+/**
+ * NAIVE 1-post-to-1-entry importer. Deliberately unchanged in behavior beyond
+ * using the shared, schema-accurate helpers (fixMojibake / extractPostText).
+ *
+ * Do NOT run this against a real Captain's Log export: it does not merge
+ * Facebook-length-limit splits (e.g. one log entry posted across two Facebook
+ * posts), does not resolve same-day aside/supplemental posts, and does not
+ * resolve conflicting/duplicate Day numbers. See audit/facebook-import-manifest.md
+ * for the reviewed, human-verified grouping this expedition's export actually
+ * needs before any commit import is safe to run.
+ */
 function runCommit(args: Args): void {
   const files = walk(args.source).filter((f) => extname(f) === ".json");
   const db = getDb();
@@ -115,7 +155,7 @@ function runCommit(args: Args): void {
     if (!looksLikeMetaPostsFile(parsed)) continue;
 
     for (const post of parsed) {
-      const text = post.data?.[0]?.post;
+      const text = fixMojibake(extractPostText(post));
       if (!text) continue;
       report.postsFound += 1;
       try {

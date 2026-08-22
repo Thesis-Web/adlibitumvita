@@ -14,7 +14,9 @@ describe("Node runtime requirement", () => {
   });
 
   it("the running test/CI Node satisfies the declared minimum", () => {
-    const [major, minor] = process.versions.node.split(".").map(Number);
+    const parts = process.versions.node.split(".").map(Number);
+    const major = parts[0] ?? 0;
+    const minor = parts[1] ?? 0;
     expect(major > 22 || (major === 22 && minor >= 12)).toBe(true);
   });
 
