@@ -63,7 +63,7 @@ GIT_SHA="$(git -C "${REPO_DIR}" rev-parse HEAD)"
 [ -n "$(git -C "${REPO_DIR}" status --porcelain)" ] && warn "Working tree has uncommitted changes — deploying committed HEAD (${GIT_SHA}) only."
 
 log "Requesting sudo (needed for /srv, /var/www, nginx, systemd)"
-sudo -v
+sudo -n true || fail "Passwordless sudo is required for host bootstrap."
 
 # --- ALV-owned persistent directories ------------------------------------
 
@@ -92,6 +92,13 @@ else
 fi
 ln -sfnT "${RUNTIME_DIR}" "${RUNTIME_CURRENT}"
 "${ALV_NODE_BIN}/node" -v
+
+# npm uses /usr/bin/env node, so ensure the ALV-private Node runtime
+# is first in PATH for all npm/npx/package-script subprocesses.
+export PATH="${ALV_NODE_BIN}:$PATH"
+hash -r
+node -v
+npm -v
 
 # --- production .env (created once, never overwritten) -------------------
 
@@ -125,8 +132,8 @@ export GIT_SHA
 RELEASE_DIR="${DEPLOY_PATH}/releases/${GIT_SHA}"
 log "Assembling release ${RELEASE_DIR}"
 mkdir -p "${RELEASE_DIR}"
-rm -rf "${RELEASE_DIR}"/{dist,migrations,scripts,node_modules}
-cp -r dist migrations scripts node_modules package.json package-lock.json "${RELEASE_DIR}/"
+rm -rf "${RELEASE_DIR}"/{dist,migrations,scripts,src,node_modules}
+cp -r dist migrations scripts src node_modules package.json package-lock.json "${RELEASE_DIR}/"
 
 # Prune dev dependencies inside the release copy only — never touch the
 # checkout's own node_modules, which stays usable for `npm run dev`/`test`.
