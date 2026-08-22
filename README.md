@@ -117,6 +117,18 @@ never touches the system Node (other apps on this host keep using their
 own), never touches another site's nginx config, and prints exact health
 check URLs when done. See `deploy/bootstrap-host.sh` for the full sequence.
 
+Before requesting a certificate, it checks that both `adlibitumvita.com` and
+`www.adlibitumvita.com` resolve to this droplet against both `1.1.1.1` and
+`8.8.8.8`. If DNS isn't there yet, it deploys the app and HTTP nginx anyway,
+skips the TLS phase (no repeated certbot attempts against unproven DNS),
+prints the exact `dig` results, and tells you to just re-run the same
+command once DNS is fixed. Optionally set `CERTBOT_EMAIL=you@example.com`
+for Let's Encrypt expiry notices; if unset and the shell is interactive
+you'll be prompted, otherwise the cert is issued without an email. Once
+issued, `www` and plain HTTP both redirect to the canonical
+`https://adlibitumvita.com`, and `certbot renew --dry-run` confirms
+auto-renewal works.
+
 **Normal path once GitHub Actions secrets exist:** push to `main`.
 `.github/workflows/deploy.yml` builds, tests, validates migrations against a
 scratch DB, assembles a self-contained release (pruned `node_modules`
