@@ -3,10 +3,24 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  /** Container width for the content inside <main>. "full" renders no wrapper at all — the page owns its own containers (used by the homepage for full-bleed hero/section imagery). */
+  container?: "narrow" | "normal" | "wide" | "full";
+  ogImage?: string;
 }
 
-const { title, description = "Ad Libitum Vita — live life unscripted.", noindex = false } = Astro.props;
+const {
+  title,
+  description = "Ad Libitum Vita — a family expedition, told as it happens, and the mindset behind it.",
+  noindex = false,
+  container = "normal",
+  ogImage = "/images/brand/mark-640.webp",
+} = Astro.props;
+
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL(ogImage, Astro.site).toString();
+const user = Astro.locals.user;
+const isAdmin = user?.role === "admin";
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -18,119 +32,406 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:site_name" content="Ad Libitum Vita" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
-    <link rel="icon" href="data:," />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#16303B" />
+    <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.jpg" />
     <style>
       :root {
-        --ink: #1b1a17;
-        --paper: #faf7f1;
-        --paper-raised: #ffffff;
-        --accent: #7a5c3e;
-        --muted: #6b6459;
-        --border: #e4ddce;
-        --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+        /* Brand palette, sampled from the Ad Libitum Vita mark and Webhead photography. */
+        --alv-turquoise: #2c9ea3;
+        --alv-turquoise-deep: #1f7276;
+        --alv-turquoise-pale: #dcf1f0;
+        --alv-coral: #e8654f;
+        --alv-coral-pale: #fbe3dd;
+        --alv-navy: #172c35;
+        --alv-navy-soft: #48626d;
+        --alv-cream: #faf5ea;
+        --alv-cream-raised: #ffffff;
+        --alv-sand: #f1e6cd;
+        --alv-border: #e4d9c1;
+        --alv-ocean-deep: #142a33;
+        --alv-ocean-deep-2: #0e1f26;
+
+        /* Semantic aliases used throughout. */
+        --ink: var(--alv-navy);
+        --paper: var(--alv-cream);
+        --paper-raised: var(--alv-cream-raised);
+        --accent: var(--alv-turquoise-deep);
+        --muted: var(--alv-navy-soft);
+        --border: var(--alv-border);
+
+        --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
         --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+        --radius: 10px;
+        --shadow-sm: 0 1px 2px rgba(23, 44, 53, 0.06), 0 1px 1px rgba(23, 44, 53, 0.04);
+        --shadow-md: 0 8px 24px rgba(23, 44, 53, 0.1);
+
+        --w-narrow: 26rem;
+        --w-normal: 44rem;
+        --w-wide: 68rem;
       }
+
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
       body {
         background: var(--paper);
         color: var(--ink);
         font-family: var(--sans);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
-      main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
-      h1, h2, h3 { font-family: var(--serif); line-height: 1.2; }
-      a { color: var(--accent); }
+
+      h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.2; font-weight: 700; color: var(--ink); }
+      h1 { font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.9rem); margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+      h2 { font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.9rem); margin: 0 0 0.6rem; }
+      h3 { font-size: 1.2rem; margin: 0 0 0.4rem; }
+      p { margin: 0 0 1rem; }
+      a { color: var(--accent); text-decoration-color: rgba(31, 114, 118, 0.35); text-underline-offset: 0.15em; }
+      a:hover { color: var(--alv-coral); }
+      img { max-width: 100%; height: auto; display: block; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+      .eyebrow {
+        display: inline-block;
+        font-family: var(--sans);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--alv-turquoise-deep);
+        margin-bottom: 0.5rem;
+      }
+      .muted { color: var(--muted); }
+      .kicker { color: var(--muted); font-size: 1.05rem; }
+
+      .container {
+        max-width: var(--w-normal);
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      main.container-narrow { max-width: var(--w-narrow); margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+      main.container-normal { max-width: var(--w-normal); margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+      main.container-wide { max-width: var(--w-wide); margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+      main.container-full { padding: 0; }
+
+      /* ---- header / nav ---- */
       header.site {
         border-bottom: 1px solid var(--border);
         background: var(--paper-raised);
+        position: sticky;
+        top: 0;
+        z-index: 40;
       }
       header.site nav {
-        max-width: 46rem;
+        max-width: 72rem;
         margin: 0 auto;
-        padding: 1rem 1.25rem;
+        padding: 0.85rem 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
       }
       header.site .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
         font-family: var(--serif);
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         text-decoration: none;
         color: var(--ink);
-        letter-spacing: 0.02em;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
       }
-      header.site .links { display: flex; gap: 1.25rem; font-size: 0.95rem; }
-      header.site .links a { text-decoration: none; color: var(--ink); }
-      header.site .links a:hover { color: var(--accent); }
-      footer.site {
-        max-width: 46rem;
-        margin: 0 auto;
-        padding: 2rem 1.25rem;
+      header.site .brand img { width: 32px; height: 32px; border-radius: 50%; }
+      header.site .brand .tagline {
+        display: block;
+        font-family: var(--sans);
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--muted);
-        font-size: 0.85rem;
-        border-top: 1px solid var(--border);
       }
-      img { max-width: 100%; height: auto; }
-      .card {
-        background: var(--paper-raised);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 1.25rem;
+      header.site .navlinks {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        font-size: 0.92rem;
+        flex-wrap: wrap;
       }
+      header.site .navlinks a { text-decoration: none; color: var(--ink); font-weight: 500; }
+      header.site .navlinks a:hover { color: var(--alv-turquoise-deep); }
+      header.site .navlinks .btn { font-size: 0.85rem; }
+      header.site .nav-toggle { display: none; }
+
+      @media (max-width: 46rem) {
+        header.site .navlinks {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: var(--paper-raised);
+          border-bottom: 1px solid var(--border);
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1rem 1.25rem 1.4rem;
+          gap: 0.9rem;
+        }
+        header.site .navlinks.open { display: flex; }
+        header.site .nav-toggle {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 2.25rem;
+          height: 2.25rem;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: transparent;
+          cursor: pointer;
+        }
+        header.site .nav-toggle span,
+        header.site .nav-toggle::before,
+        header.site .nav-toggle::after {
+          content: "";
+          display: block;
+          width: 1.1rem;
+          height: 2px;
+          background: var(--ink);
+          position: relative;
+        }
+        header.site .nav-toggle::before { position: absolute; transform: translateY(-6px); }
+        header.site .nav-toggle::after { position: absolute; transform: translateY(6px); }
+      }
+
+      /* ---- buttons / forms / cards, shared across the app ---- */
       .btn {
-        display: inline-block;
-        padding: 0.6rem 1.1rem;
-        background: var(--ink);
-        color: var(--paper);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.65rem 1.25rem;
+        background: var(--alv-turquoise-deep);
+        color: #fff;
         text-decoration: none;
-        border-radius: 4px;
-        border: none;
+        border-radius: 999px;
+        border: 1px solid transparent;
         font-size: 0.95rem;
+        font-weight: 600;
         cursor: pointer;
+        transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
       }
+      .btn:hover { background: var(--alv-turquoise); color: #fff; }
+      .btn:active { transform: translateY(1px); }
       .btn.secondary {
         background: transparent;
         color: var(--ink);
         border: 1px solid var(--border);
       }
-      label { display: block; font-size: 0.85rem; margin-bottom: 0.3rem; color: var(--muted); }
+      .btn.secondary:hover { border-color: var(--alv-turquoise-deep); color: var(--alv-turquoise-deep); background: var(--alv-turquoise-pale); }
+      .btn.coral { background: var(--alv-coral); }
+      .btn.coral:hover { background: #d9563f; }
+      .btn.small { padding: 0.4rem 0.85rem; font-size: 0.82rem; }
+      .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+      label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--muted); }
       input, textarea, select {
         width: 100%;
-        padding: 0.55rem 0.7rem;
+        padding: 0.6rem 0.75rem;
         border: 1px solid var(--border);
-        border-radius: 4px;
+        border-radius: 8px;
         font-family: inherit;
         font-size: 1rem;
         background: var(--paper-raised);
         color: var(--ink);
       }
-      .field { margin-bottom: 1rem; }
-      .muted { color: var(--muted); }
+      input:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: var(--alv-turquoise-deep);
+        box-shadow: 0 0 0 3px var(--alv-turquoise-pale);
+      }
+      .field { margin-bottom: 1.1rem; }
+      .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      @media (max-width: 32rem) { .field-row { grid-template-columns: 1fr; } }
+
+      .card {
+        background: var(--paper-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.35rem;
+        box-shadow: var(--shadow-sm);
+      }
+      a.card { display: block; text-decoration: none; color: inherit; transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+      a.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--alv-turquoise-pale); }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+      }
+      .badge.published { background: var(--alv-turquoise-pale); color: var(--alv-turquoise-deep); }
+      .badge.draft { background: var(--alv-sand); color: #8a6d2f; }
+      .badge.public { background: var(--alv-coral-pale); color: #b8442c; }
+      .badge.members { background: #e7e2f5; color: #5a4a9c; }
+
+      table { width: 100%; border-collapse: collapse; }
+      th { text-align: left; padding: 0.55rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+      td { padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+      tr:hover td { background: rgba(44, 158, 163, 0.04); }
+      .table-wrap { overflow-x: auto; }
+
+      /* ---- footer ---- */
+      footer.site {
+        background: var(--alv-ocean-deep);
+        color: #d6e6e6;
+        margin-top: 4rem;
+      }
+      footer.site .footer-inner {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem 2rem;
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        gap: 2.5rem;
+      }
+      @media (max-width: 46rem) { footer.site .footer-inner { grid-template-columns: 1fr; gap: 2rem; } }
+      footer.site h4 {
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin: 0 0 0.9rem;
+      }
+      footer.site .brand-block { display: flex; align-items: flex-start; gap: 0.75rem; }
+      footer.site .brand-block img { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+      footer.site .brand-block strong { display: block; font-family: var(--serif); font-size: 1.15rem; color: #fff; }
+      footer.site .brand-block span { display: block; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: #8fb9b9; margin-top: 0.15rem; }
+      footer.site .brand-block p { color: #a9c2c2; font-size: 0.88rem; margin-top: 0.6rem; }
+      footer.site ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
+      footer.site a { color: #d6e6e6; text-decoration: none; font-size: 0.9rem; }
+      footer.site a:hover { color: #7fd6d6; }
+      footer.site .legal {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.25rem 1.25rem;
+        text-align: center;
+        font-size: 0.78rem;
+        color: #7c9898;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap; border: 0;
+      }
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        background: var(--alv-turquoise-deep);
+        color: #fff;
+        padding: 0.6rem 1rem;
+        z-index: 100;
+        border-radius: 0 0 8px 0;
+      }
+      .skip-link:focus { left: 0; }
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site">
       <nav>
-        <a class="brand" href="/">Ad Libitum Vita</a>
-        <div class="links">
+        <a class="brand" href="/">
+          <img src="/images/brand/mark-96.webp" alt="" width="32" height="32" />
+          <span>
+            Ad Libitum Vita
+            <span class="tagline">Live Life Unscripted</span>
+          </span>
+        </a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks"><span></span></button>
+        <div class="navlinks" id="navlinks">
+          <a href="/">Home</a>
+          <a href="/library/captains-log">Captain's Log</a>
+          <a href="/library/beyond-the-map">Beyond the Map</a>
           <a href="/library">Library</a>
-          <a href="/login">Login</a>
+          {user ? (
+            <>
+              {isAdmin && <a href="/admin">Admin</a>}
+              <a href="/account">Account</a>
+              <a class="btn secondary small" href="/logout">Log out</a>
+            </>
+          ) : (
+            <a class="btn small" href="/login">Member Login</a>
+          )}
         </div>
       </nav>
     </header>
-    <main>
+
+    <main id="main" class={`container-${container}`}>
       <slot />
     </main>
+
     <footer class="site">
-      <p>Ad Libitum Vita — live life unscripted.</p>
+      <div class="footer-inner">
+        <div class="brand-block">
+          <img src="/images/brand/mark-96.webp" alt="Ad Libitum Vita compass mark" width="44" height="44" />
+          <div>
+            <strong>Ad Libitum Vita</strong>
+            <span>Live life unscripted</span>
+            <p>A family expedition, told as it happens — and the mindset behind it.</p>
+          </div>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="/library/captains-log">Captain's Log</a></li>
+            <li><a href="/library/beyond-the-map">Beyond the Map</a></li>
+            <li><a href="/library">The Library</a></li>
+            <li><a href="/login">Member Login</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Follow along</h4>
+          <ul>
+            <li><a href="mailto:AdLibitumVita@gmail.com">AdLibitumVita@gmail.com</a></li>
+            <li><a href="https://facebook.com/AdLibitumVita" rel="me noopener" target="_blank">Facebook · Ad Libitum Vita</a></li>
+            <li><a href="https://instagram.com/Ad_Libitum_Vita" rel="me noopener" target="_blank">Instagram · @Ad_Libitum_Vita</a></li>
+            <li><a href="https://twitter.com/AdLibitumVita" rel="me noopener" target="_blank">Twitter · @AdLibitumVita</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">© {year} Ad Libitum Vita. All rights reserved.</p>
     </footer>
+
+    <script>
+      const toggle = document.getElementById("nav-toggle");
+      const links = document.getElementById("navlinks");
+      toggle?.addEventListener("click", () => {
+        const open = links?.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    </script>
   </body>
 </html>

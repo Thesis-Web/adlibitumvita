@@ -2,22 +2,32 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Library" noindex>
-  <h1>The Library</h1>
-  <p class="muted">Welcome back, {Astro.locals.user?.name}.</p>
+<BaseLayout title="Library" noindex container="wide">
+  <p class="eyebrow">The Archive</p>
+  <h1>Welcome back, {Astro.locals.user?.name}.</h1>
+  <p class="muted" style="max-width: 34rem;">The full expedition archive — narrative, mindset, and everything searchable in one place.</p>
 
-  <ul style="list-style: none; padding: 0; display: grid; gap: 1rem;">
-    <li class="card">
-      <a href="/library/captains-log"><strong>Captain's Log</strong></a>
-      <p class="muted">The expedition narrative, chapter by chapter.</p>
-    </li>
-    <li class="card">
-      <a href="/library/beyond-the-map"><strong>Beyond the Map</strong></a>
-      <p class="muted">The mindset behind an expedition.</p>
-    </li>
-    <li class="card">
-      <a href="/library/search"><strong>Search</strong></a>
-      <p class="muted">Find a phrase, a place, a day.</p>
-    </li>
-  </ul>
+  <div class="library-grid">
+    <a class="card library-tile" href="/library/captains-log">
+      <span class="badge public">Narrative</span>
+      <h2>Captain's Log</h2>
+      <p class="muted">The expedition narrative, chapter by chapter — wherever "day" turns out to mean.</p>
+    </a>
+    <a class="card library-tile" href="/library/beyond-the-map">
+      <span class="badge members">Mindset</span>
+      <h2>Beyond the Map</h2>
+      <p class="muted">The thinking behind an expedition — principles, planning, and the mindset underneath it.</p>
+    </a>
+    <a class="card library-tile" href="/library/search">
+      <span class="badge draft">Search</span>
+      <h2>Search the Library</h2>
+      <p class="muted">Find a phrase, a place, a day — across every entry.</p>
+    </a>
+  </div>
+
+  <style>
+    .library-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .library-tile { padding: 1.75rem; }
+    .library-tile h2 { margin: 0.6rem 0 0.5rem; }
+  </style>
 </BaseLayout>

@@ -97,8 +97,15 @@ ln -sfnT "${RUNTIME_DIR}" "${RUNTIME_CURRENT}"
 # is first in PATH for all npm/npx/package-script subprocesses.
 export PATH="${ALV_NODE_BIN}:$PATH"
 hash -r
+[ "$(command -v node)" = "${ALV_NODE_BIN}/node" ] \
+  || fail "node resolved to $(command -v node), expected ${ALV_NODE_BIN}/node — PATH is misconfigured."
 node -v
 npm -v
+
+log "Installing operator environment wrapper (deploy/alv-node-env.sh)"
+mkdir -p "${SHARED_PATH}/bin"
+cp deploy/alv-node-env.sh "${SHARED_PATH}/bin/alv-node-env"
+chmod +x "${SHARED_PATH}/bin/alv-node-env"
 
 # --- production .env (created once, never overwritten) -------------------
 
@@ -276,12 +283,27 @@ if [ -f "${CERT_FULLCHAIN}" ]; then
 fi
 
 log "Done"
+
+# Don't trust only the canonical, non-suffixed lineage path: if an earlier
+# attempt left a partial/failed lineage behind, certbot names the next one
+# for this domain with a "-0001" (etc.) suffix, which is where the real,
+# working certificate then actually lives even though HTTPS is fine. Search
+# for any matching lineage so the summary can't say "not yet issued" while
+# nginx is serving valid TLS.
+TLS_STATUS="not yet issued"
+if [ -f "${CERT_FULLCHAIN}" ]; then
+  TLS_STATUS="issued (${CERT_FULLCHAIN})"
+else
+  FOUND_CERT="$(compgen -G "/etc/letsencrypt/live/${DOMAIN}*/fullchain.pem" 2>/dev/null | head -n1 || true)"
+  [ -n "${FOUND_CERT}" ] && TLS_STATUS="issued (${FOUND_CERT})"
+fi
+
 echo "Release:  ${RELEASE_DIR}"
 echo "Current:  $(readlink -f "${DEPLOY_PATH}/current")"
 echo "Service:  $(systemctl is-active adlibitumvita.service)"
-echo "TLS:      $([ -f "${CERT_FULLCHAIN}" ] && echo "issued (${CERT_FULLCHAIN})" || echo "not yet issued")"
+echo "TLS:      ${TLS_STATUS}"
 echo
 echo "Next: create the first admin —"
 echo "  cd ${DEPLOY_PATH}/current"
 echo "  set -a; source ${SHARED_PATH}/.env; set +a"
-echo "  ${ALV_NODE_BIN}/npm run admin:create -- --email you@example.com --name \"Your Name\""
+echo "  ${SHARED_PATH}/bin/alv-node-env npm run admin:create -- --email you@example.com --name \"Your Name\""

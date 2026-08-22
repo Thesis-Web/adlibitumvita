@@ -5,24 +5,52 @@ import { listPublishedForLibrary } from "../../../lib/content.js";
 const entries = listPublishedForLibrary("beyond-the-map");
 ---
 
-<BaseLayout title="Beyond the Map" noindex>
+<BaseLayout title="Beyond the Map" noindex container="wide">
+  <p class="eyebrow"><a href="/library">← Library</a></p>
   <h1>Beyond the Map</h1>
-  <p class="muted">The mindset behind an expedition.</p>
+  <p class="kicker" style="max-width: 34rem;">The mindset behind an expedition.</p>
 
   {entries.length === 0 ? (
-    <p class="muted">No entries published yet.</p>
+    <p class="empty-note">No entries published yet. Check back soon.</p>
   ) : (
-    <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
+    <ul class="entry-list">
       {entries.map((entry) => (
-        <li class="card">
-          <a href={`/library/beyond-the-map/${entry.slug}`}><strong>{entry.title}</strong></a>
-          <p class="muted">
-            {entry.chapter_number != null && <span>Chapter {entry.chapter_number} · </span>}
-            {entry.section_number}
-          </p>
-          {entry.excerpt && <p>{entry.excerpt}</p>}
+        <li>
+          <a class="card entry-card" href={`/library/beyond-the-map/${entry.slug}`}>
+            <p class="entry-meta">
+              {entry.chapter_number != null && <span>Chapter {entry.chapter_number}</span>}
+              {entry.section_number && <span>{entry.section_number}</span>}
+            </p>
+            <h2>{entry.title}</h2>
+            {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
+          </a>
         </li>
       ))}
     </ul>
   )}
+
+  <style>
+    .empty-note {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .entry-list { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1rem; }
+    .entry-card { padding: 1.5rem 1.75rem; }
+    .entry-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--alv-coral);
+      margin-bottom: 0.5rem;
+    }
+    .entry-card h2 { margin: 0 0 0.4rem; }
+  </style>
 </BaseLayout>

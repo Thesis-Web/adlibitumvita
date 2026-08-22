@@ -5,38 +5,45 @@ import { listUsers } from "../../../lib/users.js";
 const users = listUsers();
 ---
 
-<BaseLayout title="Users" noindex>
+<BaseLayout title="Users" noindex container="wide">
+  <p class="eyebrow"><a href="/admin">← Admin</a></p>
   <h1>Users</h1>
 
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
-    <thead>
-      <tr style="text-align: left; border-bottom: 1px solid var(--border);">
-        <th style="padding: 0.5rem 0.25rem;">Name</th>
-        <th style="padding: 0.5rem 0.25rem;">Email</th>
-        <th style="padding: 0.5rem 0.25rem;">Role</th>
-        <th style="padding: 0.5rem 0.25rem;">Library access</th>
-        <th style="padding: 0.5rem 0.25rem;"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {users.map((user) => (
-        <tr style="border-bottom: 1px solid var(--border);" data-user-id={user.id}>
-          <td style="padding: 0.5rem 0.25rem;">{user.name}</td>
-          <td style="padding: 0.5rem 0.25rem;">{user.email}</td>
-          <td style="padding: 0.5rem 0.25rem;">{user.role}</td>
-          <td style="padding: 0.5rem 0.25rem;">{user.hasLibraryAccess ? "active" : "—"}</td>
-          <td style="padding: 0.5rem 0.25rem;">
-            <button type="button" class="btn secondary grant-toggle" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">
-              {user.hasLibraryAccess ? "Revoke" : "Grant"}
-            </button>
-          </td>
+  <div class="table-wrap">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Library access</th>
+          <th></th>
         </tr>
-      ))}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr data-user-id={user.id}>
+            <td><strong>{user.name}</strong></td>
+            <td class="muted">{user.email}</td>
+            <td>{user.role}</td>
+            <td>
+              <span class={`badge ${user.hasLibraryAccess ? "published" : "draft"}`}>
+                {user.hasLibraryAccess ? "active" : "none"}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="btn secondary small grant-toggle">
+                {user.hasLibraryAccess ? "Revoke" : "Grant"}
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 
-  <h2>Add a family user</h2>
-  <form id="create-user-form" class="card" style="max-width: 24rem;">
+  <h2 class="add-user-heading">Add a family user</h2>
+  <form id="create-user-form" class="card" style="max-width: 26rem;">
     <div class="field">
       <label for="name">Name</label>
       <input id="name" name="name" required />
@@ -49,9 +56,15 @@ const users = listUsers();
       <label for="password">Temporary password</label>
       <input id="password" name="password" type="password" minlength="12" required />
     </div>
-    <p id="create-error" class="muted" style="color: #a33; display: none;"></p>
-    <button class="btn" type="submit">Create user with library access</button>
+    <p id="create-error" class="form-error" style="display: none;"></p>
+    <button class="btn coral" type="submit">Create user with library access</button>
   </form>
+
+  <style>
+    .users-table { margin-bottom: 2rem; }
+    .add-user-heading { margin-top: 2.5rem; }
+    .form-error { color: #b8442c; font-size: 0.88rem; }
+  </style>
 
   <script>
     const table = document.querySelector("tbody") as HTMLElement;

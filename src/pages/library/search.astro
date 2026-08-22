@@ -5,28 +5,54 @@ import { searchLibrary } from "../../lib/search.js";
 const query = Astro.url.searchParams.get("q") ?? "";
 const results = query ? searchLibrary(query) : [];
 const collectionPath = { "captains-log": "captains-log", "beyond-the-map": "beyond-the-map" } as const;
+const collectionLabel = { "captains-log": "Captain's Log", "beyond-the-map": "Beyond the Map" } as const;
 ---
 
-<BaseLayout title="Search" noindex>
+<BaseLayout title="Search" noindex container="wide">
+  <p class="eyebrow"><a href="/library">← Library</a></p>
   <h1>Search the Library</h1>
-  <form method="get" action="/library/search" class="field" style="display: flex; gap: 0.5rem; max-width: 28rem;">
-    <input type="search" name="q" value={query} placeholder="Search titles, prose, places…" />
+  <form method="get" action="/library/search" class="search-form">
+    <input type="search" name="q" value={query} placeholder="Search titles, prose, places…" aria-label="Search the library" />
     <button class="btn" type="submit">Search</button>
   </form>
 
   {query && (
-    <p class="muted">{results.length} result{results.length === 1 ? "" : "s"} for "{query}"</p>
+    <p class="muted result-count">{results.length} result{results.length === 1 ? "" : "s"} for &ldquo;{query}&rdquo;</p>
   )}
 
-  <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
-    {results.map((result) => (
-      <li class="card">
-        <a href={`/library/${collectionPath[result.collection]}/${result.slug}`}>
-          <strong>{result.title}</strong>
-        </a>
-        <p class="muted">{result.collection === "captains-log" ? "Captain's Log" : "Beyond the Map"}</p>
-        <p set:html={result.snippet} />
-      </li>
-    ))}
-  </ul>
+  {query && results.length === 0 ? (
+    <p class="empty-note">No matches. Try a different word or phrase.</p>
+  ) : (
+    <ul class="result-list">
+      {results.map((result) => (
+        <li>
+          <a class="card result-card" href={`/library/${collectionPath[result.collection]}/${result.slug}`}>
+            <span class={`badge ${result.collection === "captains-log" ? "public" : "members"}`}>
+              {collectionLabel[result.collection]}
+            </span>
+            <h2>{result.title}</h2>
+            <p class="snippet" set:html={result.snippet} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <style>
+    .search-form { display: flex; gap: 0.6rem; max-width: 32rem; margin: 1.5rem 0 0.5rem; }
+    .result-count { margin-bottom: 1.5rem; }
+    .empty-note {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .result-list { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 1rem; }
+    .result-card { padding: 1.4rem 1.6rem; }
+    .result-card h2 { margin: 0.5rem 0 0.4rem; font-size: 1.2rem; }
+    .snippet { color: var(--muted); }
+    .snippet :global(mark) { background: var(--alv-turquoise-pale); color: var(--alv-turquoise-deep); border-radius: 3px; padding: 0 0.15em; }
+  </style>
 </BaseLayout>

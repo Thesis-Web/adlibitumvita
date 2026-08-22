@@ -16,6 +16,19 @@ set -euo pipefail
 : "${DEPLOY_PATH:?Missing DEPLOY_PATH}"
 : "${SHARED_PATH:?Missing SHARED_PATH}"
 
+# This script always invokes tsx scripts as `"$ALV_NODE" node_modules/.bin/tsx
+# ...` (never a bare `tsx` or `npm run ...`), so it never depends on PATH
+# resolving a shebang — but assert the given node binary is actually the ALV
+# runtime and the right major version so a bad ALV_NODE fails immediately
+# with a clear message instead of an opaque ERR_DLOPEN_FAILED later.
+[ -x "${ALV_NODE}" ] || { echo "FATAL: ALV_NODE (${ALV_NODE}) is not executable." >&2; exit 1; }
+ALV_NODE_MAJOR="$("${ALV_NODE}" -p 'process.versions.node.split(".")[0]')"
+ALV_NODE_MINOR="$("${ALV_NODE}" -p 'process.versions.node.split(".")[1]')"
+if [ "${ALV_NODE_MAJOR}" -lt 22 ] || { [ "${ALV_NODE_MAJOR}" -eq 22 ] && [ "${ALV_NODE_MINOR}" -lt 12 ]; }; then
+  echo "FATAL: ALV_NODE (${ALV_NODE}) is $("${ALV_NODE}" -v), need >=22.12." >&2
+  exit 1
+fi
+
 # Invariants before touching anything live.
 test -f "$RELEASE_DIR/dist/server/entry.mjs"
 test -f "$RELEASE_DIR/package.json"

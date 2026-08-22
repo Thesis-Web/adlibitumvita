@@ -14,37 +14,108 @@ if (!entry) {
 const assets = entry ? listMediaAssetsForContent(entry.id) : [];
 const bodyHtml = entry ? renderMarkdown(entry.body_markdown) : "";
 const tags = entry ? (JSON.parse(entry.tags_json) as string[]) : [];
+const cover = assets.find((a) => a.is_cover) ?? assets[0];
+const gallery = assets.filter((a) => a.id !== cover?.id);
 ---
 
-<BaseLayout title={entry?.title ?? "Not found"} noindex>
+<BaseLayout title={entry?.title ?? "Not found"} noindex container="normal">
   {!entry ? (
-    <p>That entry couldn't be found.</p>
+    <div class="not-found">
+      <p class="eyebrow">Beyond the Map</p>
+      <h1>That entry couldn't be found.</h1>
+      <a class="btn secondary" href="/library/beyond-the-map">← Back to Beyond the Map</a>
+    </div>
   ) : (
-    <article>
-      <p class="muted"><a href="/library/beyond-the-map">&larr; Beyond the Map</a></p>
-      <h1>{entry.title}</h1>
-      {entry.subtitle && <p class="muted" style="font-size: 1.1rem;">{entry.subtitle}</p>}
-      <p class="muted">
-        {entry.chapter_number != null && <span>Chapter {entry.chapter_number} · </span>}
-        {entry.section_number}
-      </p>
+    <article class="entry-article">
+      <p class="back-link"><a href="/library/beyond-the-map">← Beyond the Map</a></p>
 
-      {assets.length > 0 && (
-        <div style="display: grid; gap: 0.5rem; margin: 1.5rem 0;">
-          {assets.map((asset) => (
-            <figure style="margin: 0;">
-              <img src={`/api/media/${asset.id}`} alt={asset.alt_text ?? ""} loading="lazy" width={asset.width ?? undefined} height={asset.height ?? undefined} />
+      <header class="entry-header">
+        <p class="entry-meta">
+          {entry.chapter_number != null && <span>Chapter {entry.chapter_number}</span>}
+          {entry.section_number && <span>{entry.section_number}</span>}
+        </p>
+        <h1>{entry.title}</h1>
+        {entry.subtitle && <p class="entry-subtitle">{entry.subtitle}</p>}
+      </header>
+
+      {cover && (
+        <figure class="entry-cover">
+          <img
+            src={`/api/media/${cover.id}`}
+            alt={cover.alt_text ?? ""}
+            width={cover.width ?? undefined}
+            height={cover.height ?? undefined}
+            decoding="async"
+          />
+          {cover.caption && <figcaption class="muted">{cover.caption}</figcaption>}
+        </figure>
+      )}
+
+      <div class="entry-body" set:html={bodyHtml} />
+
+      {gallery.length > 0 && (
+        <div class="entry-gallery">
+          {gallery.map((asset) => (
+            <figure>
+              <img
+                src={`/api/media/${asset.id}`}
+                alt={asset.alt_text ?? ""}
+                loading="lazy"
+                decoding="async"
+                width={asset.width ?? undefined}
+                height={asset.height ?? undefined}
+              />
               {asset.caption && <figcaption class="muted">{asset.caption}</figcaption>}
             </figure>
           ))}
         </div>
       )}
 
-      <div set:html={bodyHtml} />
-
       {tags.length > 0 && (
-        <p class="muted" style="margin-top: 2rem;">{tags.join(" · ")}</p>
+        <p class="entry-tags">{tags.map((t) => <span class="badge members">{t}</span>)}</p>
       )}
     </article>
   )}
+
+  <style>
+    .not-found { text-align: center; padding: 4rem 0; }
+    .back-link { margin-bottom: 1.5rem; }
+    .entry-header { margin-bottom: 1.75rem; }
+    .entry-meta {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--alv-coral); margin-bottom: 0.6rem;
+    }
+    .entry-subtitle { font-family: var(--serif); font-size: 1.2rem; color: var(--muted); margin-top: -0.2rem; }
+    .entry-cover { margin: 0 0 2rem; }
+    .entry-cover img { border-radius: var(--radius); width: 100%; }
+    .entry-cover figcaption { font-size: 0.85rem; margin-top: 0.5rem; }
+
+    .entry-body { font-size: 1.08rem; line-height: 1.75; }
+    .entry-body :global(h2) { margin-top: 2.2rem; }
+    .entry-body :global(h3) { margin-top: 1.8rem; }
+    .entry-body :global(p) { margin-bottom: 1.25rem; }
+    .entry-body :global(img) { border-radius: var(--radius); margin: 1.5rem 0; }
+    .entry-body :global(blockquote) {
+      margin: 1.75rem 0;
+      padding: 0.25rem 0 0.25rem 1.25rem;
+      border-left: 3px solid var(--alv-turquoise-deep);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+    .entry-body :global(a) { text-decoration: underline; }
+
+    .entry-gallery {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+      gap: 0.75rem;
+    }
+    .entry-gallery figure { margin: 0; }
+    .entry-gallery img { border-radius: 8px; }
+    .entry-gallery figcaption { font-size: 0.78rem; margin-top: 0.3rem; }
+
+    .entry-tags { margin-top: 2.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  </style>
 </BaseLayout>

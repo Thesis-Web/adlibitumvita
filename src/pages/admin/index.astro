@@ -7,17 +7,26 @@ const drafts = all.filter((e) => e.status === "draft").length;
 const published = all.filter((e) => e.status === "published").length;
 ---
 
-<BaseLayout title="Admin" noindex>
-  <h1>Admin</h1>
-  <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); margin-bottom: 2rem;">
-    <div class="card"><strong style="font-size: 1.5rem;">{all.length}</strong><p class="muted">total entries</p></div>
-    <div class="card"><strong style="font-size: 1.5rem;">{drafts}</strong><p class="muted">drafts</p></div>
-    <div class="card"><strong style="font-size: 1.5rem;">{published}</strong><p class="muted">published</p></div>
+<BaseLayout title="Admin" noindex container="wide">
+  <p class="eyebrow">Admin</p>
+  <h1>Publishing dashboard</h1>
+
+  <div class="stat-grid">
+    <div class="card stat"><strong>{all.length}</strong><p class="muted">total entries</p></div>
+    <div class="card stat"><strong>{drafts}</strong><p class="muted">drafts</p></div>
+    <div class="card stat"><strong>{published}</strong><p class="muted">published</p></div>
   </div>
 
-  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-    <a class="btn" href="/admin/content/new">New Entry</a>
+  <div class="action-row">
+    <a class="btn coral" href="/admin/content/new">New Entry</a>
     <a class="btn secondary" href="/admin/content">Manage Content</a>
     <a class="btn secondary" href="/admin/users">Manage Users</a>
   </div>
+
+  <style>
+    .stat-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); margin: 1.75rem 0 2rem; }
+    .stat strong { font-family: var(--serif); font-size: 2rem; display: block; }
+    .stat p { margin-bottom: 0; }
+    .action-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  </style>
 </BaseLayout>

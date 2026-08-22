@@ -4,8 +4,18 @@ import { hasLibraryAccess, isAdmin } from "./lib/entitlements.js";
 
 const BLOCKED_AUTH_PATHS = ["/api/auth/sign-up/email"];
 
+// These routes are prerendered at build time and carry no auth-dependent
+// content. Astro warns (and, worse, forces a DB open) when middleware
+// touches request headers / session state for a prerendered route, so they
+// must never reach the session lookup below.
+const STATIC_PUBLIC_PATHS = new Set(["/robots.txt", "/sitemap.xml", "/meta/version.json"]);
+
 export const onRequest = defineMiddleware(async (ctx, next) => {
   const { pathname } = ctx.url;
+
+  if (STATIC_PUBLIC_PATHS.has(pathname)) {
+    return next();
+  }
 
   if (BLOCKED_AUTH_PATHS.some((p) => pathname === p)) {
     return new Response(JSON.stringify({ error: "Public sign-up is disabled." }), {

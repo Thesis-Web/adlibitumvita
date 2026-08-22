@@ -2,10 +2,11 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="New Entry" noindex>
+<BaseLayout title="New Entry" noindex container="wide">
+  <p class="eyebrow"><a href="/admin/content">← Content</a></p>
   <h1>New Entry</h1>
 
-  <form id="entry-form" style="max-width: 40rem;">
+  <form id="entry-form" class="entry-form">
     <div class="field">
       <label for="collection">Collection</label>
       <select id="collection" name="collection" required>
@@ -36,10 +37,10 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
     <div class="field">
       <label for="body_markdown">Body (Markdown)</label>
-      <textarea id="body_markdown" name="body_markdown" rows="16" required></textarea>
+      <textarea id="body_markdown" name="body_markdown" rows="16" required class="body-editor"></textarea>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div class="field-row field-row-3">
       <div class="field">
         <label for="day_number">Day number</label>
         <input id="day_number" name="day_number" type="number" />
@@ -66,7 +67,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div class="field-row">
       <div class="field">
         <label for="visibility">Visibility</label>
         <select id="visibility" name="visibility">
@@ -80,13 +81,22 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
       </div>
     </div>
 
-    <p id="form-error" class="muted" style="color: #a33; display: none;"></p>
+    <p id="form-error" class="form-error" style="display: none;"></p>
 
-    <div style="display: flex; gap: 0.75rem;">
+    <div class="form-actions">
       <button class="btn secondary" type="submit" data-status="draft">Save Draft</button>
-      <button class="btn" type="submit" data-status="published">Publish</button>
+      <button class="btn coral" type="submit" data-status="published">Publish</button>
     </div>
   </form>
+
+  <style>
+    .entry-form { max-width: 44rem; }
+    .field-row-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 40rem) { .field-row-3 { grid-template-columns: 1fr 1fr; } }
+    .body-editor { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92rem; line-height: 1.55; }
+    .form-error { color: #b8442c; font-size: 0.88rem; }
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+  </style>
 
   <script>
     const form = document.getElementById("entry-form") as HTMLFormElement;

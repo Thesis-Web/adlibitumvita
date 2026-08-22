@@ -2,8 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Logging out" noindex>
-  <p>Logging out…</p>
+<BaseLayout title="Logging out" noindex container="narrow">
+  <p class="muted" style="text-align: center; margin-top: 3rem;">Logging out…</p>
   <script>
     fetch("/api/auth/sign-out", { method: "POST" }).finally(() => {
       window.location.href = "/";

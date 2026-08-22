@@ -37,6 +37,15 @@ npm run db:backup                  # safe SQLite backup API, writes to <db-dir>/
 Dev/test databases live in `.data/` (gitignored). Production:
 `/srv/adlibitumvita/shared/data/adlibitumvita.sqlite3`.
 
+In production, run these through `alv-node-env` (see "First admin" above)
+from `/var/www/adlibitumvita/current` with `/srv/adlibitumvita/shared/.env`
+sourced:
+
+```bash
+/srv/adlibitumvita/shared/bin/alv-node-env npm run db:migrate
+/srv/adlibitumvita/shared/bin/alv-node-env npm run db:backup
+```
+
 ## First admin
 
 No default admin account is ever created automatically.
@@ -49,16 +58,24 @@ be sourced explicitly for one-off commands:
 ```bash
 cd /var/www/adlibitumvita/current
 set -a; source /srv/adlibitumvita/shared/.env; set +a
-npm run admin:create -- --email you@example.com --name "Your Name"
+/srv/adlibitumvita/shared/bin/alv-node-env npm run admin:create -- --email you@example.com --name "Your Name"
 # prompts for a password (min 12 chars), or set ADMIN_BOOTSTRAP_PASSWORD to skip the prompt
 ```
 
 This creates the user, sets `role = admin`, and grants active library
 access. Log in at `/login`. A second admin requires `--force`.
 
-(In production, use the release's own Node — see "Deploy" below — e.g.
-`/srv/adlibitumvita/shared/runtime/current/bin/npm run admin:create -- ...`
-if the system Node isn't the one on your `PATH`.)
+`alv-node-env` (installed by `bootstrap-host.sh` from `deploy/alv-node-env.sh`)
+puts the ALV-private Node 22 runtime first on `PATH` before running the
+command. This matters because `npm`/`npx`/`tsx` resolve their own
+interpreter via a `#!/usr/bin/env node` shebang — i.e. from `PATH` — not
+from wherever the `npm` binary you invoked lives. Running
+`/srv/adlibitumvita/shared/runtime/current/bin/npm run admin:create`
+directly, in a shell where system Node 20 is first on `PATH`, still
+resolves `node` to system Node 20 and fails to load `better-sqlite3`
+(`ERR_DLOPEN_FAILED`, ABI mismatch) — always go through `alv-node-env`, not
+the runtime's `npm` binary directly. Every command below follows the same
+rule.
 
 ## Adding a family user
 
@@ -98,6 +115,11 @@ Facebook export (schema not finalized until the real export arrives):
 npm run import:facebook -- --source /path/to/export --discover   # inventories only, no DB writes
 npm run import:facebook -- --source /path/to/export --commit     # only touches recognized Meta post JSON; creates drafts
 ```
+
+In production, prefix any of the above with
+`/srv/adlibitumvita/shared/bin/alv-node-env` (see "First admin" above), run
+from `/var/www/adlibitumvita/current` with the shared `.env` sourced — e.g.
+`/srv/adlibitumvita/shared/bin/alv-node-env npm run import:markdown -- --source ... --dry-run`.
 
 ## Deploy
 

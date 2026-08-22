@@ -56,6 +56,7 @@ jobs:
           cp -r dist release/dist
           cp -r migrations release/migrations
           cp -r scripts release/scripts
+          cp -r src release/src
           cp -r node_modules release/node_modules
           cp package.json release/package.json
           cp package-lock.json release/package-lock.json

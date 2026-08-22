@@ -6,54 +6,224 @@ const captainsLog = listPublicTeasers("captains-log", 3);
 const beyondTheMap = listPublicTeasers("beyond-the-map", 3);
 ---
 
-<BaseLayout title="Live Life Unscripted" description="Ad Libitum Vita — a family expedition, told as it happens, and the mindset behind it.">
-  <section>
-    <h1>Ad Libitum Vita</h1>
-    <p class="muted" style="font-size: 1.1rem; margin-top: -0.5rem;">live life unscripted</p>
-    <p>
-      This is the record of a family expedition — where we went, what broke, what we learned,
-      and the thinking that got us out the door in the first place. Some of it is public.
-      Most of the story lives in the library, for family and friends who've been given a key.
-    </p>
+<BaseLayout
+  title="Live Life Unscripted"
+  description="Ad Libitum Vita — a family expedition, told as it happens, and the mindset behind it."
+  container="full"
+>
+  <section class="hero">
+    <picture class="hero-media">
+      <source
+        type="image/avif"
+        srcset="/images/hero/webhead-768.avif 768w, /images/hero/webhead-1280.avif 1280w, /images/hero/webhead-1920.avif 1920w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/images/hero/webhead-768.webp 768w, /images/hero/webhead-1280.webp 1280w, /images/hero/webhead-1920.webp 1920w"
+        sizes="100vw"
+      />
+      <img
+        src="/images/hero/webhead-1280.webp"
+        alt="Sunset over the open ocean, the Ad Libitum Vita compass mark resting over the water"
+        width="1920"
+        height="562"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
+      <p class="eyebrow">A family expedition</p>
+      <h1>Ad Libitum Vita</h1>
+      <p class="hero-tagline">Live life unscripted.</p>
+      <p class="hero-lede">
+        This is the record of a family expedition — where we went, what broke, what we learned,
+        and the thinking that got us out the door in the first place.
+      </p>
+      <div class="hero-actions">
+        <a class="btn coral" href="/login">Enter the Library</a>
+        <a class="btn secondary hero-btn-ghost" href="#the-journey">The Journey ↓</a>
+      </div>
+    </div>
   </section>
 
-  <section style="margin-top: 2.5rem;">
-    <h2>Captain's Log</h2>
-    <p class="muted">The expedition narrative — day by day, wherever "day" turns out to mean.</p>
+  <section id="the-journey" class="container section-pad">
+    <div class="intro-grid">
+      <div>
+        <p class="eyebrow">The Journey</p>
+        <h2>An expedition, told as it happens</h2>
+        <p>
+          Ad Libitum Vita started as a simple idea: go, see, and write it down before memory
+          smooths out the edges. It's a family on the move — chasing coastlines, weather
+          windows, and the occasional bad decision — narrated honestly, day by day, wherever
+          "day" turns out to mean.
+        </p>
+        <p class="muted">
+          Some of it is public. Most of the story — the full narrative, the photographs, the
+          unfiltered version — lives in the library, for the family and friends who've been
+          given a key.
+        </p>
+      </div>
+      <div class="intro-mark">
+        <img src="/images/brand/mark-320.webp" alt="" width="180" height="180" loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <section class="container section-pad">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Captain's Log</p>
+        <h2>The expedition narrative</h2>
+        <p class="kicker">Day by day, wherever "day" turns out to mean.</p>
+      </div>
+      <a class="btn secondary" href="/library/captains-log">Read the Log</a>
+    </div>
+
     {captainsLog.length === 0 ? (
-      <p class="muted">Entries are being written. Check back soon.</p>
+      <p class="empty-note">
+        Entries are being written as the expedition unfolds — the first dispatches will land
+        here soon.
+      </p>
     ) : (
-      <ul style="list-style: none; padding: 0;">
+      <div class="teaser-grid">
         {captainsLog.map((entry) => (
-          <li class="card" style="margin-bottom: 0.75rem;">
-            <a href={`/library/captains-log/${entry.slug}`}><strong>{entry.title}</strong></a>
+          <a class="card teaser-card" href={`/library/captains-log/${entry.slug}`}>
+            <span class="badge public">Captain's Log</span>
+            <h3>{entry.title}</h3>
             {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
-          </li>
+          </a>
         ))}
-      </ul>
+      </div>
     )}
   </section>
 
-  <section style="margin-top: 2.5rem;">
-    <h2>Beyond the Map</h2>
-    <p class="muted">The mindset behind an expedition.</p>
-    {beyondTheMap.length === 0 ? (
-      <p class="muted">Entries are being written. Check back soon.</p>
-    ) : (
-      <ul style="list-style: none; padding: 0;">
-        {beyondTheMap.map((entry) => (
-          <li class="card" style="margin-bottom: 0.75rem;">
-            <a href={`/library/beyond-the-map/${entry.slug}`}><strong>{entry.title}</strong></a>
-            {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
-          </li>
-        ))}
-      </ul>
-    )}
+  <section class="beyond-band">
+    <picture class="beyond-media">
+      <source
+        type="image/avif"
+        srcset="/images/section/coastal-fog-768.avif 768w, /images/section/coastal-fog-1280.avif 1280w, /images/section/coastal-fog-1920.avif 1920w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/images/section/coastal-fog-768.webp 768w, /images/section/coastal-fog-1280.webp 1280w, /images/section/coastal-fog-1920.webp 1920w"
+        sizes="100vw"
+      />
+      <img
+        src="/images/section/coastal-fog-1280.webp"
+        alt="Misty coastline at dawn, sea stacks fading into fog over still water"
+        width="1920"
+        height="852"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <div class="beyond-scrim"></div>
+    <div class="container beyond-content">
+      <p class="eyebrow eyebrow-light">Beyond the Map</p>
+      <h2>The mindset behind an expedition</h2>
+      <p class="beyond-lede">
+        Beyond the Map is the durable material — the principles, the planning, the mindset
+        that turns "someday" into a departure date. Less play-by-play, more the thinking
+        underneath it.
+      </p>
+
+      {beyondTheMap.length === 0 ? (
+        <p class="beyond-lede muted-light">Chapters are being written. Check back soon.</p>
+      ) : (
+        <div class="teaser-grid teaser-grid-light">
+          {beyondTheMap.map((entry) => (
+            <a class="card teaser-card teaser-card-light" href={`/library/beyond-the-map/${entry.slug}`}>
+              <span class="badge public">Beyond the Map</span>
+              <h3>{entry.title}</h3>
+              {entry.excerpt && <p class="muted">{entry.excerpt}</p>}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <a class="btn secondary hero-btn-ghost" href="/library/beyond-the-map">Read Beyond the Map</a>
+    </div>
   </section>
 
-  <section class="card" style="margin-top: 2.5rem;">
-    <h2 style="margin-top: 0;">Family &amp; friends</h2>
-    <p>The full library — every entry, every photo, searchable — is for people we've invited in.</p>
-    <a class="btn" href="/login">Member Login</a>
+  <section class="container section-pad">
+    <div class="library-cta card">
+      <div>
+        <p class="eyebrow">Family &amp; friends</p>
+        <h2>The full library</h2>
+        <p>
+          Every entry, every photograph, searchable — for the people we've invited in. Family
+          members and friends get individual accounts; there's no public sign-up.
+        </p>
+      </div>
+      <a class="btn coral" href="/login">Member Login</a>
+    </div>
   </section>
+
+  <style>
+    .hero {
+      position: relative;
+      display: grid;
+      overflow: hidden;
+      min-height: 62vh;
+      background: var(--alv-ocean-deep);
+    }
+    .hero-media { grid-area: 1 / 1; height: 100%; }
+    .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 55%; }
+    .hero-scrim {
+      grid-area: 1 / 1;
+      background: linear-gradient(100deg, rgba(14, 31, 38, 0.82) 0%, rgba(14, 31, 38, 0.5) 42%, rgba(14, 31, 38, 0.08) 70%);
+    }
+    .hero-content {
+      grid-area: 1 / 1;
+      align-self: end;
+      color: #fff;
+      max-width: 72rem;
+      margin: 0 auto;
+      width: 100%;
+      padding: 3rem 1.25rem 3.5rem;
+    }
+    .hero-content h1 { color: #fff; font-size: clamp(2.4rem, 1.9rem + 2.4vw, 4rem); margin-bottom: 0.15rem; }
+    .hero-tagline { font-family: var(--serif); font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem); color: #bfe3e2; margin-bottom: 1rem; }
+    .hero-lede { max-width: 34rem; color: #e7f0ef; font-size: 1.05rem; }
+    .eyebrow-light { color: #9fd8d6; }
+    .hero-actions { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .hero-btn-ghost { border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+    .hero-btn-ghost:hover { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: #fff; }
+
+    .section-pad { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+
+    .intro-grid { display: grid; grid-template-columns: 1fr auto; gap: 2.5rem; align-items: center; }
+    .intro-mark { display: flex; justify-content: center; opacity: 0.92; }
+    @media (max-width: 42rem) { .intro-grid { grid-template-columns: 1fr; } .intro-mark { display: none; } }
+
+    .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap; }
+    .empty-note {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      color: var(--muted);
+      text-align: center;
+      background: var(--paper-raised);
+    }
+
+    .teaser-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.1rem; }
+    .teaser-card h3 { margin: 0.6rem 0 0.4rem; }
+    .teaser-card .badge { margin-bottom: 0; }
+
+    .beyond-band { position: relative; display: grid; overflow: hidden; margin-top: 1rem; }
+    .beyond-media { grid-area: 1 / 1; height: 100%; }
+    .beyond-media img { width: 100%; height: 100%; object-fit: cover; min-height: 26rem; }
+    .beyond-scrim { grid-area: 1 / 1; background: linear-gradient(180deg, rgba(20, 42, 51, 0.72) 0%, rgba(20, 42, 51, 0.88) 100%); }
+    .beyond-content { grid-area: 1 / 1; align-self: center; padding: 3.5rem 1.25rem; color: #fff; }
+    .beyond-lede { max-width: 38rem; color: #dcebe9; }
+    .muted-light { color: #a9c7c5; }
+    .teaser-grid-light { margin-bottom: 1.5rem; }
+    .teaser-card-light { background: rgba(250, 245, 234, 0.96); }
+
+    .library-cta { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .library-cta p { margin-bottom: 0; }
+  </style>
 </BaseLayout>

@@ -7,10 +7,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "predev": "tsx scripts/write-build-info.ts",
     "dev": "astro dev",
-    "build": "tsx scripts/write-build-info.ts && astro check && astro build",
+    "prebuild": "tsx scripts/write-build-info.ts",
+    "build": "astro check && astro build",
     "preview": "astro preview",
+    "pretypecheck": "tsx scripts/write-build-info.ts",
     "typecheck": "astro check --minimumSeverity error && tsc --noEmit -p tsconfig.scripts.json",
+    "pretest": "tsx scripts/write-build-info.ts",
     "test": "vitest run",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:backup": "tsx scripts/db-backup.ts",

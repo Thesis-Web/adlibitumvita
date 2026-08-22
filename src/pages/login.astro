@@ -8,11 +8,15 @@ if (Astro.locals.user) {
 const next = Astro.url.searchParams.get("next") ?? "/library";
 ---
 
-<BaseLayout title="Login" noindex>
-  <h1>Login</h1>
-  <p class="muted">Accounts are created by the family. There is no public sign-up.</p>
+<BaseLayout title="Login" noindex container="narrow">
+  <div class="login-mark">
+    <img src="/images/brand/mark-160.webp" alt="Ad Libitum Vita compass mark" width="72" height="72" decoding="async" />
+  </div>
+  <p class="eyebrow" style="text-align: center; display: block;">Welcome back</p>
+  <h1 style="text-align: center;">Enter the Library</h1>
+  <p class="muted" style="text-align: center;">Accounts are created by the family. There is no public sign-up.</p>
 
-  <form id="login-form" class="card" style="max-width: 24rem;">
+  <form id="login-form" class="card" style="margin-top: 1.5rem;">
     <div class="field">
       <label for="email">Email</label>
       <input id="email" name="email" type="email" required autocomplete="username" />
@@ -21,9 +25,15 @@ const next = Astro.url.searchParams.get("next") ?? "/library";
       <label for="password">Password</label>
       <input id="password" name="password" type="password" required autocomplete="current-password" />
     </div>
-    <p id="login-error" class="muted" style="color: #a33; display: none;"></p>
-    <button class="btn" type="submit">Log in</button>
+    <p id="login-error" class="form-error" style="display: none;"></p>
+    <button class="btn coral" type="submit" style="width: 100%;">Log in</button>
   </form>
+
+  <style>
+    .login-mark { display: flex; justify-content: center; margin-bottom: 1rem; }
+    .login-mark img { border-radius: 50%; box-shadow: var(--shadow-md); }
+    .form-error { color: #b8442c; font-size: 0.88rem; }
+  </style>
 
   <script is:inline define:vars={{ next }}>
     const form = document.getElementById("login-form");
