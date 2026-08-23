@@ -1,7 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getPublicEntryDetail, getPublicNeighbors } from "../../lib/content.js";
-import { renderMarkdown } from "../../lib/markdown.js";
+import { listEditorialPlacements } from "../../lib/editorial-placements.js";
+import { filterPlacementsForPreview, renderIllustratedBody, type MediaLike } from "../../lib/editorial-layout.js";
+import { listMediaAssetsForContent } from "../../lib/media-assets.js";
 
 export const prerender = false;
 
@@ -14,7 +16,19 @@ if (!entry) {
   Astro.response.headers.set("cache-control", "public, max-age=60, s-maxage=300, stale-while-revalidate=86400");
 }
 
-const previewHtml = entry ? renderMarkdown(entry.public_preview_markdown ?? "") : "";
+// Public teaser rule (CLAUDE.md §8): only PUBLIC-visibility media, and only editorial
+// placements whose anchor text actually falls within the (already-truncated) public
+// preview markdown — never the full gated body's photo set.
+const previewMarkdown = entry?.public_preview_markdown ?? "";
+const publicAssets = entry ? listMediaAssetsForContent(entry.id).filter((a) => a.visibility === "public") : [];
+const mediaById = new Map<string, MediaLike>(publicAssets.map((a) => [a.id, a]));
+const hero = publicAssets.find((a) => a.is_cover) ?? publicAssets[0];
+
+const allPlacements = entry ? listEditorialPlacements(entry.id) : [];
+const previewPlacements = filterPlacementsForPreview(allPlacements, previewMarkdown, mediaById);
+
+const previewIllustrated = entry ? renderIllustratedBody(previewMarkdown, previewPlacements, mediaById) : { html: "" };
+const previewHtml = previewIllustrated.html;
 const tags = entry ? (JSON.parse(entry.tags_json) as string[]) : [];
 const neighbors = entry ? getPublicNeighbors("captains-log", entry.day_number) : { previous: null, next: null };
 const canonicalUrl = entry ? new URL(`/captains-log/${entry.slug}`, Astro.site).toString() : "";
@@ -68,7 +82,23 @@ const jsonLd = entry
         {entry.subtitle && <p class="entry-subtitle">{entry.subtitle}</p>}
       </header>
 
-      <div class="entry-body" set:html={previewHtml} />
+      {hero && (
+        <figure class="hero">
+          <img
+            src={`/api/media/${hero.id}`}
+            srcset={`/api/media/${hero.id}?size=thumb 500w, /api/media/${hero.id} 1800w`}
+            sizes="(max-width: 46rem) 100vw, 44rem"
+            alt={hero.alt_text ?? ""}
+            width={hero.width ?? undefined}
+            height={hero.height ?? undefined}
+            style={hero.width && hero.height ? `aspect-ratio:${hero.width}/${hero.height}` : undefined}
+            decoding="async"
+            fetchpriority="high"
+          />
+        </figure>
+      )}
+
+      <div class="entry-body prose-grid" set:html={previewHtml} />
 
       <div class="continue-cta card">
         <div>
@@ -104,6 +134,25 @@ const jsonLd = entry
       color: var(--alv-turquoise-deep); margin-bottom: 0.6rem;
     }
     .entry-subtitle { font-family: var(--serif); font-size: 1.2rem; color: var(--muted); margin-top: -0.2rem; }
+
+    .hero { margin: 1.75rem 0 2rem; }
+    .hero img { width: 100%; border-radius: var(--radius); background: var(--alv-sand); }
+
+    .prose-grid :global(.chapter-break) { text-align: center; margin: 3rem 0 2rem; }
+    .prose-grid :global(.chapter-ornament) { display: block; color: var(--alv-coral); letter-spacing: 0.3em; margin-bottom: 1rem; }
+    .prose-grid :global(.chapter-label) {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--alv-turquoise-deep); margin: 0 0 0.35rem;
+    }
+    .prose-grid :global(.chapter-title) { font-size: clamp(1.4rem, 1.15rem + 0.9vw, 1.9rem); margin: 0; }
+    .prose-grid :global(figure.editorial-img) { margin: 1.75rem 0; }
+    .prose-grid :global(figure.editorial-img img) { width: 100%; border-radius: var(--radius); background: var(--alv-sand); }
+    .prose-grid :global(figure.editorial-img figcaption) { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; text-align: center; }
+    .prose-grid :global(.editorial-img-group) {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; margin: 1.75rem 0;
+    }
+    .prose-grid :global(.editorial-img-group figure) { margin: 0; }
+    .prose-grid :global(.editorial-img-group img) { width: 100%; border-radius: var(--radius); }
 
     .entry-body { font-size: 1.08rem; line-height: 1.75; }
     .entry-body :global(h2) { margin-top: 2.2rem; }

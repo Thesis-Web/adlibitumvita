@@ -121,6 +121,21 @@ In production, prefix any of the above with
 from `/var/www/adlibitumvita/current` with the shared `.env` sourced — e.g.
 `/srv/adlibitumvita/shared/bin/alv-node-env npm run import:markdown -- --source ... --dry-run`.
 
+Canonical Captain's Log images (private, off-repo manifest + extracted files —
+see `media/build-image-manifest.py` and `media/extract-canonical-images.py` in
+the private uploads area, not this repo):
+
+```bash
+npm run import:images                # dry run — validates, uploads nothing
+npm run import:images -- --commit    # uploads derivatives, writes media_assets rows
+```
+
+Idempotent (matched by content + source URI) — safe to re-run after copying more
+extracted files in. A missing source file is reported and skipped, never a
+broken DB row. Once the canonical images for Day 11 are ingested, hand-authored
+editorial photo placement for that one representative Day can be (re-)applied
+with `npm run seed:day-11-placements`.
+
 ## Deploy
 
 **First deploy, or any manual deploy, run directly on the droplet:**

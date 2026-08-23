@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getPublishedEntryForLibrary } from "../../../lib/content.js";
+import { getLibraryNeighbors, getPublishedEntryForLibrary } from "../../../lib/content.js";
+import { listEditorialPlacements } from "../../../lib/editorial-placements.js";
+import { renderIllustratedBody, type MediaLike } from "../../../lib/editorial-layout.js";
 import { listMediaAssetsForContent } from "../../../lib/media-assets.js";
-import { renderMarkdown } from "../../../lib/markdown.js";
 
 const { slug } = Astro.params;
 const entry = slug ? getPublishedEntryForLibrary("captains-log", slug) : undefined;
@@ -12,111 +13,320 @@ if (!entry) {
 }
 
 const assets = entry ? listMediaAssetsForContent(entry.id) : [];
-const bodyHtml = entry ? renderMarkdown(entry.body_markdown) : "";
+const placements = entry ? listEditorialPlacements(entry.id) : [];
+const mediaById = new Map<string, MediaLike>(assets.map((a) => [a.id, a]));
+const hero = assets.find((a) => a.is_cover) ?? assets[0];
+
+const bodyPlacements = placements.filter((p) => p.layout_role !== "hero");
+const illustrated = entry
+  ? renderIllustratedBody(entry.body_markdown, bodyPlacements, mediaById)
+  : { html: "", placedMediaIds: new Set<string>() };
+
+const remainingGallery = assets.filter((a) => a.id !== hero?.id && !illustrated.placedMediaIds.has(a.id));
+
 const tags = entry ? (JSON.parse(entry.tags_json) as string[]) : [];
-const cover = assets.find((a) => a.is_cover) ?? assets[0];
-const gallery = assets.filter((a) => a.id !== cover?.id);
+const neighbors = entry ? getLibraryNeighbors("captains-log", entry.day_number) : { previous: null, next: null };
 ---
 
-<BaseLayout title={entry?.title ?? "Not found"} noindex container="normal">
+<BaseLayout title={entry?.title ?? "Not found"} noindex container="full">
   {!entry ? (
-    <div class="not-found">
+    <div class="container-normal not-found">
       <p class="eyebrow">Captain's Log</p>
       <h1>That entry couldn't be found.</h1>
       <a class="btn secondary" href="/library/captains-log">← Back to Captain's Log</a>
     </div>
   ) : (
-    <article class="entry-article">
+    <>
+    <article class="reader">
       <p class="back-link"><a href="/library/captains-log">← Captain's Log</a></p>
 
-      <header class="entry-header">
+      <header class="entry-open">
+        <p class="eyebrow">Captain's Log</p>
+        {entry.day_number != null && <p class="day-label">Day {entry.day_number}</p>}
+        <h1>{entry.title}</h1>
+        {entry.subtitle && <p class="entry-subtitle">{entry.subtitle}</p>}
         <p class="entry-meta">
-          {entry.day_number != null && <span>Day {entry.day_number}</span>}
           {entry.expedition_date && <span>{entry.expedition_date}</span>}
           {entry.location && <span>{entry.location}</span>}
         </p>
-        <h1>{entry.title}</h1>
-        {entry.subtitle && <p class="entry-subtitle">{entry.subtitle}</p>}
       </header>
 
-      {cover && (
-        <figure class="entry-cover">
+      {hero && (
+        <figure class="hero">
           <img
-            src={`/api/media/${cover.id}`}
-            alt={cover.alt_text ?? ""}
-            width={cover.width ?? undefined}
-            height={cover.height ?? undefined}
+            src={`/api/media/${hero.id}`}
+            srcset={`/api/media/${hero.id}?size=thumb 500w, /api/media/${hero.id} 1800w`}
+            sizes="100vw"
+            alt={hero.alt_text ?? ""}
+            width={hero.width ?? undefined}
+            height={hero.height ?? undefined}
+            style={hero.width && hero.height ? `aspect-ratio:${hero.width}/${hero.height}` : undefined}
             decoding="async"
+            fetchpriority="high"
           />
-          {cover.caption && <figcaption class="muted">{cover.caption}</figcaption>}
+          {hero.caption && <figcaption>{hero.caption}</figcaption>}
         </figure>
       )}
 
-      <div class="entry-body" set:html={bodyHtml} />
+      <div class="prose-grid" set:html={illustrated.html} />
 
-      {gallery.length > 0 && (
-        <div class="entry-gallery">
-          {gallery.map((asset) => (
-            <figure>
-              <img
-                src={`/api/media/${asset.id}`}
-                alt={asset.alt_text ?? ""}
-                loading="lazy"
-                decoding="async"
-                width={asset.width ?? undefined}
-                height={asset.height ?? undefined}
-              />
-              {asset.caption && <figcaption class="muted">{asset.caption}</figcaption>}
-            </figure>
-          ))}
-        </div>
+      {remainingGallery.length > 0 && (
+        <section class="more-gallery" aria-label={`More photographs from Day ${entry.day_number ?? ""}`}>
+          <h2 class="gallery-heading">More from {entry.day_number != null ? `Day ${entry.day_number}` : "this entry"}</h2>
+          <div class="gallery-grid">
+            {remainingGallery.map((asset, i) => (
+              <button
+                type="button"
+                class="gallery-item"
+                data-lightbox-trigger
+                data-index={i}
+                style={asset.width && asset.height ? `aspect-ratio:${asset.width}/${asset.height}` : undefined}
+              >
+                <img
+                  src={`/api/media/${asset.id}?size=thumb`}
+                  alt={asset.alt_text ?? ""}
+                  loading="lazy"
+                  decoding="async"
+                  width={asset.width ?? undefined}
+                  height={asset.height ?? undefined}
+                />
+              </button>
+            ))}
+          </div>
+        </section>
       )}
 
       {tags.length > 0 && (
         <p class="entry-tags">{tags.map((t) => <span class="badge draft">{t}</span>)}</p>
       )}
+
+      <nav class="entry-nav" aria-label="Captain's Log navigation">
+        <a class={`nav-link ${!neighbors.previous ? "disabled" : ""}`} href={neighbors.previous ? `/library/captains-log/${neighbors.previous.slug}` : undefined}>
+          {neighbors.previous ? <>← Day {neighbors.previous.day_number}<span class="nav-title">{neighbors.previous.title}</span></> : <>Start of the log</>}
+        </a>
+        <a class={`nav-link nav-link-next ${!neighbors.next ? "disabled" : ""}`} href={neighbors.next ? `/library/captains-log/${neighbors.next.slug}` : undefined}>
+          {neighbors.next ? <>Day {neighbors.next.day_number} →<span class="nav-title">{neighbors.next.title}</span></> : <>Latest entry</>}
+        </a>
+      </nav>
     </article>
+
+    {neighbors.next && (
+      <a class="continuation-zone" href={`/library/captains-log/${neighbors.next.slug}`} data-continuation>
+        <span class="continuation-inner">
+          <span class="continuation-label">Continue the journey</span>
+          <span class="continuation-day">Day {neighbors.next.day_number} <span aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    )}
+
+    {remainingGallery.length > 0 && (
+      <dialog id="lightbox" aria-label="Photo viewer">
+        <button type="button" class="lightbox-close" data-lightbox-close aria-label="Close">✕</button>
+        <button type="button" class="lightbox-prev" data-lightbox-prev aria-label="Previous photo">‹</button>
+        <img id="lightbox-img" alt="" />
+        <p id="lightbox-caption"></p>
+        <button type="button" class="lightbox-next" data-lightbox-next aria-label="Next photo">›</button>
+      </dialog>
+    )}
+    </>
   )}
 
   <style>
     .not-found { text-align: center; padding: 4rem 0; }
+    .reader { max-width: 68rem; margin: 0 auto; padding: 2rem 1.25rem 0; }
     .back-link { margin-bottom: 1.5rem; }
-    .entry-header { margin-bottom: 1.75rem; }
+
+    .entry-open { max-width: 44rem; margin: 0 auto 1.75rem; text-align: left; }
+    .day-label {
+      font-family: var(--sans); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--alv-coral); margin: 0.2rem 0 0.5rem;
+    }
+    .entry-open h1 { margin-bottom: 0.3rem; }
+    .entry-subtitle { font-family: var(--serif); font-size: 1.25rem; color: var(--muted); margin: 0 0 0.6rem; }
     .entry-meta {
       display: flex; gap: 0.75rem; flex-wrap: wrap;
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-      color: var(--alv-turquoise-deep); margin-bottom: 0.6rem;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.03em;
+      color: var(--muted); margin: 0;
     }
-    .entry-subtitle { font-family: var(--serif); font-size: 1.2rem; color: var(--muted); margin-top: -0.2rem; }
-    .entry-cover { margin: 0 0 2rem; }
-    .entry-cover img { border-radius: var(--radius); width: 100%; }
-    .entry-cover figcaption { font-size: 0.85rem; margin-top: 0.5rem; }
 
-    .entry-body { font-size: 1.08rem; line-height: 1.75; }
-    .entry-body :global(h2) { margin-top: 2.2rem; }
-    .entry-body :global(h3) { margin-top: 1.8rem; }
-    .entry-body :global(p) { margin-bottom: 1.25rem; }
-    .entry-body :global(img) { border-radius: var(--radius); margin: 1.5rem 0; }
-    .entry-body :global(blockquote) {
-      margin: 1.75rem 0;
-      padding: 0.25rem 0 0.25rem 1.25rem;
-      border-left: 3px solid var(--alv-coral);
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      color: var(--muted);
-    }
-    .entry-body :global(a) { text-decoration: underline; }
+    .hero { margin: 0 0 2.5rem; }
+    .hero img { width: 100%; border-radius: var(--radius); background: var(--alv-sand); }
+    .hero figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; text-align: center; }
 
-    .entry-gallery {
-      margin-top: 2.5rem;
+    /* Editorial breakout grid: prose stays ~760px; .role-wide / .editorial-img-group / .chapter-opener escape wider. */
+    .prose-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: 1fr min(760px, 100%) 1fr;
+      column-gap: 1.25rem;
+      row-gap: 0;
     }
-    .entry-gallery figure { margin: 0; }
-    .entry-gallery img { border-radius: 8px; }
-    .entry-gallery figcaption { font-size: 0.78rem; margin-top: 0.3rem; }
+    .prose-grid :global(> *) { grid-column: 2; }
+    .prose-grid :global(p) { font-size: 1.1rem; line-height: 1.8; margin: 0 0 1.4rem; font-family: var(--serif); }
+    .prose-grid :global(blockquote) {
+      margin: 1.75rem 0; padding: 0.25rem 0 0.25rem 1.25rem;
+      border-left: 3px solid var(--alv-coral); font-style: italic; color: var(--muted);
+    }
+    .prose-grid :global(a) { text-decoration: underline; }
 
-    .entry-tags { margin-top: 2.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .prose-grid :global(.chapter-break) {
+      text-align: center; margin: 3.5rem 0 2.25rem;
+    }
+    .prose-grid :global(.chapter-ornament) { display: block; color: var(--alv-coral); letter-spacing: 0.3em; margin-bottom: 1rem; }
+    .prose-grid :global(.chapter-label) {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--alv-turquoise-deep); margin: 0 0 0.35rem;
+    }
+    .prose-grid :global(.chapter-title) {
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); margin: 0;
+    }
+
+    .prose-grid :global(figure.editorial-img) { margin: 2.25rem 0; }
+    .prose-grid :global(figure.editorial-img img) { width: 100%; border-radius: var(--radius); background: var(--alv-sand); }
+    .prose-grid :global(figure.editorial-img figcaption) { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; text-align: center; }
+    .prose-grid :global(.role-wide),
+    .prose-grid :global(.role-chapter-opener),
+    .prose-grid :global(.editorial-img-group) { grid-column: 1 / 4; max-width: 62rem; margin-left: auto; margin-right: auto; width: 100%; }
+    .prose-grid :global(.role-inline) { max-width: 100%; }
+
+    .prose-grid :global(.editorial-img-group) {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.25rem; margin: 2.25rem auto;
+    }
+    .prose-grid :global(.editorial-img-group figure) { margin: 0; }
+    .prose-grid :global(.editorial-img-group img) { width: 100%; border-radius: var(--radius); }
+    .prose-grid :global(.triptych) { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+
+    .more-gallery { max-width: 62rem; margin: 3.5rem auto 0; }
+    .gallery-heading { font-size: 1.15rem; margin-bottom: 1rem; }
+    .gallery-grid { columns: 2 12rem; column-gap: 0.75rem; }
+    @media (min-width: 40rem) { .gallery-grid { columns: 3 12rem; } }
+    @media (min-width: 60rem) { .gallery-grid { columns: 4 12rem; } }
+    .gallery-item {
+      display: block; width: 100%; break-inside: avoid; margin: 0 0 0.75rem;
+      padding: 0; border: none; border-radius: 8px; overflow: hidden; cursor: zoom-in;
+      background: var(--alv-sand);
+    }
+    .gallery-item:focus-visible { outline: 3px solid var(--alv-turquoise-deep); outline-offset: 2px; }
+    .gallery-item img { display: block; width: 100%; height: auto; transition: transform 0.2s ease; }
+    .gallery-item:hover img { transform: scale(1.03); }
+
+    .entry-tags { max-width: 44rem; margin: 2.5rem auto 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .entry-nav {
+      max-width: 62rem; margin: 3rem auto 0; padding: 1.5rem 0; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; gap: 1rem;
+    }
+    .nav-link { flex: 1; text-decoration: none; font-weight: 600; display: flex; flex-direction: column; }
+    .nav-link-next { text-align: right; align-items: flex-end; }
+    .nav-link .nav-title { font-weight: 400; font-size: 0.85rem; color: var(--muted); margin-top: 0.15rem; }
+    .nav-link.disabled { color: var(--muted); pointer-events: none; font-weight: 400; }
+
+    /* Large, quiet bottom continuation zone — the "turn the page" edge. */
+    .continuation-zone {
+      display: block; width: 100%; margin-top: 2.5rem;
+      min-height: 9rem; padding: 2rem 1.25rem;
+      background: linear-gradient(180deg, transparent, var(--alv-turquoise-pale) 60%);
+      text-decoration: none; color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .continuation-inner {
+      max-width: 44rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center;
+      gap: 0.35rem; text-align: center;
+    }
+    .continuation-label {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--alv-turquoise-deep);
+    }
+    .continuation-day { font-family: var(--serif); font-size: 1.6rem; }
+    .continuation-zone:hover .continuation-day,
+    .continuation-zone:focus-visible .continuation-day { color: var(--alv-coral); }
+    .continuation-zone:focus-visible { outline: 3px solid var(--alv-turquoise-deep); outline-offset: -4px; }
+
+    dialog#lightbox {
+      border: none; border-radius: var(--radius); padding: 0; max-width: 92vw; max-height: 92vh;
+      background: var(--alv-ocean-deep-2);
+    }
+    dialog#lightbox::backdrop { background: rgba(14, 31, 38, 0.88); }
+    dialog#lightbox img { display: block; max-width: 90vw; max-height: 78vh; margin: 0 auto; }
+    dialog#lightbox p#lightbox-caption { color: #d6e6e6; text-align: center; font-size: 0.85rem; padding: 0.75rem 1rem 1rem; margin: 0; }
+    .lightbox-close, .lightbox-prev, .lightbox-next {
+      position: absolute; background: rgba(14, 31, 38, 0.6); color: #fff; border: none;
+      cursor: pointer; font-size: 1.4rem; line-height: 1; border-radius: 999px;
+      width: 2.75rem; height: 2.75rem; display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-close:focus-visible, .lightbox-prev:focus-visible, .lightbox-next:focus-visible { outline: 3px solid #fff; }
+    .lightbox-close { top: 0.75rem; right: 0.75rem; }
+    .lightbox-prev { left: 0.5rem; top: 50%; transform: translateY(-50%); }
+    .lightbox-next { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+
+    @media (max-width: 40rem) {
+      .reader { padding: 1.5rem 1rem 0; }
+      .prose-grid { column-gap: 0; }
+      .prose-grid :global(.role-wide),
+      .prose-grid :global(.role-chapter-opener),
+      .prose-grid :global(.editorial-img-group) { grid-column: 2; }
+      .gallery-item, .lightbox-close, .lightbox-prev, .lightbox-next { min-width: 44px; min-height: 44px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-item img, html { scroll-behavior: auto; transition: none !important; }
+    }
   </style>
+
+  <script>
+    // Bottom continuation zone: navigate only on a genuine tap/click, never mid-scroll.
+    const zone = document.querySelector<HTMLAnchorElement>("[data-continuation]");
+    if (zone) {
+      let startX = 0;
+      let startY = 0;
+      let dragDistance = 0;
+      const THRESHOLD = 14;
+      zone.addEventListener("pointerdown", (e) => {
+        startX = e.clientX;
+        startY = e.clientY;
+        dragDistance = 0;
+      });
+      zone.addEventListener("pointermove", (e) => {
+        dragDistance = Math.max(dragDistance, Math.hypot(e.clientX - startX, e.clientY - startY));
+      });
+      zone.addEventListener("click", (e) => {
+        if (dragDistance > THRESHOLD) e.preventDefault();
+      });
+    }
+
+    // Minimal accessible lightbox for the "More from Day N" gallery.
+    const dialog = document.querySelector<HTMLDialogElement>("#lightbox");
+    const triggers = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-lightbox-trigger]"));
+    if (dialog && triggers.length > 0) {
+      const lightboxImg = dialog.querySelector<HTMLImageElement>("#lightbox-img")!;
+      const lightboxCaption = dialog.querySelector<HTMLParagraphElement>("#lightbox-caption")!;
+      let currentIndex = 0;
+
+      const show = (index: number) => {
+        currentIndex = (index + triggers.length) % triggers.length;
+        const trigger = triggers[currentIndex]!;
+        const img = trigger.querySelector("img")!;
+        lightboxImg.src = img.src.replace(/\?size=thumb$/, "");
+        lightboxImg.alt = img.alt;
+        lightboxCaption.textContent = img.alt || "";
+      };
+
+      triggers.forEach((trigger, i) => {
+        trigger.addEventListener("click", () => {
+          show(i);
+          dialog.showModal();
+        });
+      });
+
+      dialog.querySelector("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
+      dialog.querySelector("[data-lightbox-prev]")?.addEventListener("click", () => show(currentIndex - 1));
+      dialog.querySelector("[data-lightbox-next]")?.addEventListener("click", () => show(currentIndex + 1));
+      dialog.addEventListener("click", (e) => {
+        if (e.target === dialog) dialog.close();
+      });
+      dialog.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") show(currentIndex - 1);
+        if (e.key === "ArrowRight") show(currentIndex + 1);
+      });
+    }
+  </script>
 </BaseLayout>

@@ -381,6 +381,38 @@ export function getPublicNeighbors(
   return { previous, next };
 }
 
+/** Previous/next navigation among all published library entries (members or public), by canonical day number. */
+export function getLibraryNeighbors(
+  collection: Collection,
+  dayNumber: number | null,
+): { previous: PublicNeighbor | null; next: PublicNeighbor | null } {
+  if (dayNumber == null) return { previous: null, next: null };
+  const db = getDb();
+  const previous =
+    db
+      .prepare<
+        [Collection, number],
+        PublicNeighbor
+      >(
+        `SELECT slug, title, day_number FROM content_entries
+         WHERE collection = ? AND status = 'published' AND day_number < ?
+         ORDER BY day_number DESC LIMIT 1`,
+      )
+      .get(collection, dayNumber) ?? null;
+  const next =
+    db
+      .prepare<
+        [Collection, number],
+        PublicNeighbor
+      >(
+        `SELECT slug, title, day_number FROM content_entries
+         WHERE collection = ? AND status = 'published' AND day_number > ?
+         ORDER BY day_number ASC LIMIT 1`,
+      )
+      .get(collection, dayNumber) ?? null;
+  return { previous, next };
+}
+
 export function listPublishedForLibrary(collection: Collection): ContentEntry[] {
   return getDb()
     .prepare<

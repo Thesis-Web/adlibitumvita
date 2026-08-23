@@ -21,7 +21,9 @@
     "admin:create": "tsx scripts/admin-create.ts",
     "import:markdown": "tsx scripts/import-markdown.ts",
     "import:facebook": "tsx scripts/import-facebook.ts",
-    "import:captains-log:canonical": "tsx scripts/import-captains-log-canonical.ts"
+    "import:captains-log:canonical": "tsx scripts/import-captains-log-canonical.ts",
+    "import:images": "tsx scripts/import-canonical-images.ts",
+    "seed:day-11-placements": "tsx scripts/seed-day-11-placements.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.4",

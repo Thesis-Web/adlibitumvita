@@ -19,6 +19,7 @@ export interface MediaAsset {
   visibility: ContentVisibility;
   created_at: string;
   created_by: string | null;
+  source_uri: string | null;
 }
 
 export interface CreateMediaAssetInput {
@@ -33,6 +34,18 @@ export interface CreateMediaAssetInput {
   altText?: string | null;
   caption?: string | null;
   visibility?: ContentVisibility;
+  /** Import provenance (e.g. a Facebook export media URI) — enables idempotent bulk ingest. */
+  sourceUri?: string | null;
+}
+
+/** Looks up an existing asset by import provenance, so a bulk ingest can be re-run without duplicating. */
+export function getMediaAssetBySourceUri(contentId: string, sourceUri: string): MediaAsset | undefined {
+  return getDb()
+    .prepare<
+      [string, string],
+      MediaAsset
+    >("SELECT * FROM media_assets WHERE content_id = ? AND source_uri = ?")
+    .get(contentId, sourceUri);
 }
 
 export function createMediaAsset(input: CreateMediaAssetInput, actorUserId: string | null): MediaAsset {
@@ -62,15 +75,16 @@ export function createMediaAsset(input: CreateMediaAssetInput, actorUserId: stri
     visibility: input.visibility ?? "members",
     created_at: new Date().toISOString(),
     created_by: actorUserId,
+    source_uri: input.sourceUri ?? null,
   };
 
   db.prepare(
     `INSERT INTO media_assets (
       id, content_id, storage_provider, storage_key, thumbnail_key, mime_type, width, height,
-      byte_size, alt_text, caption, sort_order, is_cover, visibility, created_at, created_by
+      byte_size, alt_text, caption, sort_order, is_cover, visibility, created_at, created_by, source_uri
     ) VALUES (
       @id, @content_id, @storage_provider, @storage_key, @thumbnail_key, @mime_type, @width, @height,
-      @byte_size, @alt_text, @caption, @sort_order, @is_cover, @visibility, @created_at, @created_by
+      @byte_size, @alt_text, @caption, @sort_order, @is_cover, @visibility, @created_at, @created_by, @source_uri
     )`,
   ).run(asset);
 
